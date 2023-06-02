@@ -1,35 +1,36 @@
 package com.js.photoalbum.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.js.photoalbum.BaseActivity;
 import com.js.photoalbum.R;
 import com.js.photoalbum.adapter.LargeRecyclerViewAdapter;
+import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.utils.CustomUtil;
-import com.js.photoalbum.view.ZoomImageView;
+import com.js.photoalbum.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageLargeActivity extends Activity {
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+@SuppressLint("LongLogTag")
+public class ImageLargeActivity extends BaseActivity {
+
+    private static final String TAG = "ImageLargeActivity==============>";
 
 //    private ZoomImageView ivLarge;
     private RecyclerView recyclerView;
     private LargeRecyclerViewAdapter adapter;
-    private List<String> mList;
+    private List<PhotoBean> mList;
     private Button btnBack;
 
     @Override
@@ -53,7 +54,7 @@ public class ImageLargeActivity extends Activity {
 
         Intent intent = getIntent();
         int position = intent.getIntExtra("position", 0);
-        mList.addAll(intent.getStringArrayListExtra("mList"));
+        mList.addAll(intent.getParcelableArrayListExtra("mList"));
         recyclerView.scrollToPosition(position);
         adapter.notifyDataSetChanged();
 
@@ -67,5 +68,57 @@ public class ImageLargeActivity extends Activity {
                 finish();
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            //用来标记是否正在向最后一个滑动
+            boolean isSlidingToLast = false;
+            boolean isSlidingToStart = false;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.e(TAG, "=====");
+                //设置什么布局管理器,就获取什么的布局管理器
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                // 当停止滑动时
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    //获取最后一个完全显示的ItemPosition ,角标值
+                    int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
+                    int firstVisibleItem = manager.findFirstVisibleItemPosition();
+                    //所有条目,数量值
+                    int totalItemCount = manager.getItemCount();
+
+                    // 判断是否滚动到底部，并且是向右滚动
+                    if (lastVisibleItem == (totalItemCount - 1) && isSlidingToLast) {
+                        //加载更多功能的代码
+//                        Toast.makeText(ImageLargeActivity.this, "当前是本分类最后一张图片", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showToast(ImageLargeActivity.this, "当前是本分类最后一张图片");
+//                        Snackbar.make(ImageLargeActivity.this, recyclerView, "当前是本分类最后一张图片", Snackbar.LENGTH_SHORT).show();
+                    } else if (firstVisibleItem == 0 && isSlidingToStart) {
+//                        Toast.makeText(ImageLargeActivity.this, "当前是本分类第一张图片", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showToast(ImageLargeActivity.this, "当前是本分类第一张图片");
+                    } else {
+                        ToastUtils.cancelToast();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //dx用来判断横向滑动方向，dy用来判断纵向滑动方向
+                //dx>0:向右滑动,dx<0:向左滑动
+                //dy>0:向下滑动,dy<0:向上滑动
+                Log.e(TAG, "dx:" + dx + ",dy:" + dy);
+                isSlidingToLast = dx > 0;
+                isSlidingToStart = dx < 0;
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ToastUtils.cancelToast();
     }
 }

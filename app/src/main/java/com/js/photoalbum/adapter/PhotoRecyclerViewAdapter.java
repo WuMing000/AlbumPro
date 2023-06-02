@@ -2,7 +2,9 @@ package com.js.photoalbum.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +14,31 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.js.photoalbum.MyApplication;
 import com.js.photoalbum.R;
 import com.js.photoalbum.activity.ImageLargeActivity;
+import com.js.photoalbum.bean.PhotoBean;
+import com.js.photoalbum.utils.ToastUtils;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<String> mList;
+    private List<PhotoBean> mList;
 
     private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
 
-    public PhotoRecyclerViewAdapter(Context mContext, List<String> mList) {
+    public PhotoRecyclerViewAdapter(Context mContext, List<PhotoBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -46,7 +56,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerViewAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        String s = mList.get(position);
+        String s = mList.get(position).getImgUrl();
 //        Glide.with(mContext).load(s).into(holder.ivPhoto);
 //        Bitmap bitmap = BitmapFactory.decodeFile(s);
 //        Log.e("TAG", bitmap.getWidth() +  "," + bitmap.getHeight() + "");
@@ -57,10 +67,36 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 //                .priority(Priority.HIGH) //优先级
 //                .transform(new GlideRoundTransformation(8)); //圆角
         Glide.with(mContext).load(s).apply(RequestOptions.bitmapTransform(new RoundedCorners(15))).placeholder(R.mipmap.loading_image).into(holder.ivPhoto);
+
+        holder.ivRightSlide.setVisibility(View.GONE);
+        for (PhotoBean photoBean : MyApplication.getPhotoList()) {
+            if (s.equals(photoBean.getImgUrl())) {
+                holder.ivRightSlide.setVisibility(View.VISIBLE);
+            }
+        }
+//        Glide.with(mContext).load(s).apply(RequestOptions.bitmapTransform(new RoundedCorners(15))).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
+//            @Override
+//            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                holder.ivPhoto.setImageDrawable(resource);
+//            }
+//
+//            @Override
+//            public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//            }
+//        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onClick(position);
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onItemLongClickListener.onClick(mList.get(position), holder.ivRightSlide);
+                return true;
             }
         });
 //        Glide.with(mContext).load(s).placeholder(R.mipmap.loading_image).into(holder.ivPhoto);
@@ -75,11 +111,13 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
         private ImageView ivPhoto;
         private CardView cvImage;
+        private ImageView ivRightSlide;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             cvImage = itemView.findViewById(R.id.cv_image);
             ivPhoto = itemView.findViewById(R.id.iv_photo);
+            ivRightSlide = itemView.findViewById(R.id.iv_right_slide);
         }
     }
 
@@ -89,5 +127,13 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
     public interface OnItemClickListener {
         void onClick(int position);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener itemLongClickListener) {
+        this.onItemLongClickListener = itemLongClickListener;
+    }
+
+    public interface OnItemLongClickListener {
+        void onClick(PhotoBean photoBean, ImageView imageView);
     }
 }

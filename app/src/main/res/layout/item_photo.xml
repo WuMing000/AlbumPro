@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:cardBackgroundColor="#00000000"
-        app:cardElevation="20dp"
+        app:cardElevation="10dp"
         app:cardCornerRadius="15dp">
 
         <ImageView
@@ -21,8 +21,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:drawingCacheQuality="high" />
+
+        <ImageView
+            android:id="@+id/iv_right_slide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_slide_three"
+            android:layout_gravity="end|bottom"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
+            android:visibility="gone"/>
 
     </androidx.cardview.widget.CardView>
 
