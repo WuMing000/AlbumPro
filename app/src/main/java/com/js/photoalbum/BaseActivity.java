@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.js.photoalbum.utils.CustomUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.Nullable;
 
 @SuppressLint("LongLogTag")
@@ -14,11 +17,14 @@ public class BaseActivity extends Activity {
 
     private static final String TAG = "BaseActivity==============>";
 
+    private static List<Activity> activityList = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         CustomUtil.hideNavigationBar(this);
+        activityList.add(this);
     }
 
     @Override
@@ -55,5 +61,27 @@ public class BaseActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+        activityList.remove(this);
     }
+
+    public static void finishAll() {
+        for(Activity activity : activityList) {
+            activity.finish();
+        }
+
+        activityList.clear();
+    }
+
+    public static void exit() {
+        finishAll();
+        // 这个主要是用来关闭进程的, 关把所有activity finish
+        // 的话，进程是不会关闭的
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.exit(0);
+    }
+
 }

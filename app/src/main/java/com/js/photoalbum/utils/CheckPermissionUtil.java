@@ -28,9 +28,10 @@ public class CheckPermissionUtil {
                 startRequestPermission(activity);
             } else {
                 //获取权限成功,跳转
-                Intent intent = new Intent(MyApplication.getContext(), MainActivity.class);
+                Intent intent = new Intent(activity, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                MyApplication.getContext().startActivity(intent);
+                activity.startActivity(intent);
+                activity.finish();
             }
         }
     }

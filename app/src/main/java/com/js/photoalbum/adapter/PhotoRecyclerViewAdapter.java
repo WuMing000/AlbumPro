@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -57,6 +58,13 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerViewAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         String s = mList.get(position).getImgUrl();
+        String imgAuthor = mList.get(position).getImgAuthor();
+        String imgName = mList.get(position).getImgName();
+        String newName = "";
+        if (imgName.length() != 0) {
+            newName = imgName.substring(0, imgName.length() - 4);
+        }
+
 //        Glide.with(mContext).load(s).into(holder.ivPhoto);
 //        Bitmap bitmap = BitmapFactory.decodeFile(s);
 //        Log.e("TAG", bitmap.getWidth() +  "," + bitmap.getHeight() + "");
@@ -67,6 +75,9 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 //                .priority(Priority.HIGH) //优先级
 //                .transform(new GlideRoundTransformation(8)); //圆角
         Glide.with(mContext).load(s).apply(RequestOptions.bitmapTransform(new RoundedCorners(15))).placeholder(R.mipmap.loading_image).into(holder.ivPhoto);
+
+        holder.tvImageName.setText(newName);
+        holder.tvImageAuthor.setText(imgAuthor);
 
         holder.ivRightSlide.setVisibility(View.GONE);
         for (PhotoBean photoBean : MyApplication.getPhotoList()) {
@@ -112,12 +123,16 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
         private ImageView ivPhoto;
         private CardView cvImage;
         private ImageView ivRightSlide;
+        private TextView tvImageName;
+        private TextView tvImageAuthor;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             cvImage = itemView.findViewById(R.id.cv_image);
             ivPhoto = itemView.findViewById(R.id.iv_photo);
             ivRightSlide = itemView.findViewById(R.id.iv_right_slide);
+            tvImageName = itemView.findViewById(R.id.tv_image_name);
+            tvImageAuthor = itemView.findViewById(R.id.tv_image_author);
         }
     }
 

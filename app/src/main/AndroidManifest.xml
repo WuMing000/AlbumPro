@@ -29,7 +29,8 @@
             android:name=".activity.MainActivity"
             android:exported="true"
             android:screenOrientation="unspecified"
-            android:theme="@style/MyThemeFullScreen" />
+            android:theme="@style/MyThemeFullScreen"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <activity
             android:name=".activity.SlideActivity"

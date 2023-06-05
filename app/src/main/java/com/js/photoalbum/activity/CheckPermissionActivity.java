@@ -7,11 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.js.photoalbum.BaseActivity;
 import com.js.photoalbum.R;
 import com.js.photoalbum.utils.CheckPermissionUtil;
+import com.js.photoalbum.utils.CustomUtil;
 
 import androidx.annotation.NonNull;
 
@@ -20,6 +22,7 @@ public class CheckPermissionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_permission);
         CheckPermissionUtil.checkPermissions(this);
     }
@@ -50,6 +53,7 @@ public class CheckPermissionActivity extends BaseActivity {
                     //获取权限成功,跳转
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         }

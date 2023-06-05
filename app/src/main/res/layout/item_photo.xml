@@ -37,20 +37,26 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/tv_image_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="《成龙历险记》"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textSize="26sp"
         android:textColor="@color/white"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="60dp"/>
 
     <TextView
+        android:id="@+id/tv_image_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="成龙"
         android:textSize="18sp"
         android:textColor="@android:color/darker_gray"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="60dp"/>
+        android:layout_marginBottom="60dp"
+        android:visibility="gone"/>
 
 </LinearLayout>

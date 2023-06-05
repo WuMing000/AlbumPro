@@ -1,7 +1,10 @@
 package com.js.photoalbum.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -54,20 +57,21 @@ public class SlideActivity extends BaseActivity {
         @Override
         public void dispatchMessage(@NonNull Message msg) {
             super.dispatchMessage(msg);
-            if (msg.what == 0x001) {
-                handler.postDelayed(timeRunnable, 1000);
-            }
+//            if (msg.what == 0x001) {
+//                handler.postDelayed(timeRunnable, 1000);
+//            }
         }
     };
 
-    Runnable timeRunnable = new Runnable() {
-        @Override
-        public void run() {
-            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-            String date = df.format(new Date());
-            tvTime.setText(date);
-        }
-    };
+//    Runnable timeRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+//            String date = df.format(new Date());
+//            tvTime.setText(date);
+////            handler.sendEmptyMessageAtTime(0x001, 100);
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +91,10 @@ public class SlideActivity extends BaseActivity {
         PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
         pagerSnapHelper.attachToRecyclerView(rvSlide);
 
-        handler.sendEmptyMessageAtTime(0x001, 100);
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String date = df.format(new Date());
+        tvTime.setText(date);
+//        handler.sendEmptyMessageAtTime(0x001, 100);
 
 //        rvSlide.addOnScrollListener(onScrollListener);
 
@@ -161,7 +168,43 @@ public class SlideActivity extends BaseActivity {
                 rvSlide.smoothScrollToPosition(linearLayoutManager.findFirstVisibleItemPosition() + 1);
             }
         }, 5000, 5000, TimeUnit.MILLISECONDS);
+
+        registerUpdateTimeReceiver();
     }
+
+    /**
+     * interval update time
+     */
+    private void registerUpdateTimeReceiver() {
+        //register time update
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        registerReceiver(mTimeUpdateReceiver, filter);
+    }
+
+    /**
+     * broad receive time update
+     */
+    BroadcastReceiver mTimeUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null) {
+                return;
+            }
+            String action = intent.getAction();
+            if (action == null || action.isEmpty()) {
+                return;
+            }
+
+            if (action.equals(Intent.ACTION_TIME_TICK)) {
+                //system every 1 min send broadcast
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                String date = df.format(new Date());
+                tvTime.setText(date);
+            }
+        }
+    };
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -185,6 +228,9 @@ public class SlideActivity extends BaseActivity {
         super.onStop();
         if (scheduledExecutorService != null) {
             scheduledExecutorService.shutdown();
+        }
+        if (mTimeUpdateReceiver != null) {
+            unregisterReceiver(mTimeUpdateReceiver);
         }
     }
 }
