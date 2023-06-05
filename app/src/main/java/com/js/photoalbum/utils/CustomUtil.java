@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -14,9 +15,13 @@ import android.widget.EditText;
 
 import com.js.photoalbum.MyApplication;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class CustomUtil {
+
+    private static final String TAG = "CustomUtil============>";
 
     /**
      * 隐藏底部底部导航栏
@@ -91,6 +96,23 @@ public class CustomUtil {
             view = new View(MyApplication.getContext());
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static boolean isTouchPointInView(@NotNull View view, int x, int y) {
+//        Log.e(TAG, "x:" + x + ",y:" + y);
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        int left = location[0];
+        int top = location[1];
+        int right = left + view.getMeasuredWidth();
+        int bottom = top + view.getMeasuredHeight();
+//        Log.e(TAG, "left:" + left + ",right:" + right + ",top:" + top + ",bottom:" + bottom);
+        if (top <= y) {
+            if (bottom >= y && x >= left && x <= right) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

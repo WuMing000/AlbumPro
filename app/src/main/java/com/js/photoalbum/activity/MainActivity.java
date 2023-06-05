@@ -91,6 +91,8 @@ public class MainActivity extends BaseActivity {
 
     private ObjectAnimator animator;
 
+//    private int slideSpeed;
+
     private Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void dispatchMessage(@NonNull Message msg) {
@@ -375,6 +377,7 @@ public class MainActivity extends BaseActivity {
                     ToastUtils.showToast(MainActivity.this, "请长按图片添加图片到幻灯片");
                 } else {
                     Intent intent = new Intent(MainActivity.this, SlideActivity.class);
+//                    intent.putExtra("slideSpeed", slideSpeed);
 //                    intent.putParcelableArrayListExtra("slideList", (ArrayList<PhotoBean>) slideList);
                     startActivity(intent);
                 }
@@ -390,15 +393,24 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         String editSpeed = slideDialog.getEditSpeed();
-                        String typeId = slideDialog.getTypeText();
-                        if (Integer.parseInt(editSpeed) > 20000) {
-                            ToastUtils.showToast(MainActivity.this, "超过最大限制，请重新输入！");
-                            slideDialog.setEditSpeed();
+                        if (editSpeed == null) {
+                            Log.d(TAG, "edittext is null!");
                         } else {
                             slideDialog.dismiss();
+                            Log.e(TAG, editSpeed);
+                            MyApplication.setSlideSpeed(editSpeed);
+//                            slideSpeed = Integer.parseInt(editSpeed);
                         }
+                        String typeId = slideDialog.getTypeText();
+//                        if (editSpeed != null && Integer.parseInt(editSpeed) > 20000) {
+//                            ToastUtils.showToast(MainActivity.this, "超过最大限制，请重新输入！");
+//                            slideDialog.setEditSpeed();
+//                            Log.e(TAG, editSpeed);
+//                        }
+//                        else {
+////                            slideDialog.dismiss();
+//                        }
                         Log.e(TAG, typeId + "");
-                        Log.e(TAG, editSpeed);
                     }
                 });
                 slideDialog.setCancelOnClickListener(new View.OnClickListener() {

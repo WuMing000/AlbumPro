@@ -13,6 +13,7 @@ public class MyApplication extends Application {
 
     private static Context mContext;
     private static PhotoListDataSaveUtils photoListDataSaveUtils;
+    private static PhotoListDataSaveUtils slideDataSaveUtils;
 
     private static List<PhotoBean> photoList;
 
@@ -24,6 +25,14 @@ public class MyApplication extends Application {
         MyApplication.photoList = photoList;
         Log.e("TAG", MyApplication.photoList.toString());
         photoListDataSaveUtils.setDataList("photoList", MyApplication.photoList);
+    }
+
+    public static String getSlideSpeed() {
+        return slideDataSaveUtils.getDataString("slideSpeed");
+    }
+
+    public static void setSlideSpeed(String slideSpeed) {
+        slideDataSaveUtils.setDataString("slideSpeed", slideSpeed);
     }
 
     public static Context getContext() {
@@ -39,5 +48,6 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         photoListDataSaveUtils = new PhotoListDataSaveUtils(mContext, "photo_list_data");
+        slideDataSaveUtils = new PhotoListDataSaveUtils(mContext, "slide_list_data");
     }
 }

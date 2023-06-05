@@ -1,8 +1,11 @@
 package com.js.photoalbum.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,7 +23,11 @@ import com.js.photoalbum.utils.ToastUtils;
 
 import androidx.annotation.NonNull;
 
+@SuppressLint("UseCompatLoadingForDrawables")
 public class SlideDialog extends Dialog {
+
+    private final static String TAG = "SlideDialog===========>";
+    private final static int MAX_SPEED = 120000;
 
     private EditText etSpeed;
     private RadioGroup rgType;
@@ -48,6 +55,31 @@ public class SlideDialog extends Dialog {
                 }
             }
         });
+
+        etSpeed.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (etSpeed.getText().toString().length() == 0 || Integer.parseInt(etSpeed.getText().toString()) < 1000) {
+                    return;
+                } else {
+                    etSpeed.setBackground(MyApplication.getContext().getResources().getDrawable(R.drawable.selector_edittext_bg, null));
+                }
+                if (Integer.parseInt(etSpeed.getText().toString()) > MAX_SPEED) {
+                    etSpeed.setText("" + MAX_SPEED);
+                    etSpeed.setSelection(etSpeed.getText().length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         setContentView(view);
     }
 
@@ -60,17 +92,20 @@ public class SlideDialog extends Dialog {
     }
 
     public String getEditSpeed () {
+        if (etSpeed.getText().toString().length() == 0) {
+            etSpeed.setBackground(MyApplication.getContext().getResources().getDrawable(R.drawable.selector_edittext_null_bg, null));
+            ToastUtils.showToast(MyApplication.getContext(), "幻灯片播放速度输入为空");
+            return null;
+        }else if (Integer.parseInt(etSpeed.getText().toString()) < 1000) {
+            etSpeed.setBackground(MyApplication.getContext().getResources().getDrawable(R.drawable.selector_edittext_null_bg, null));
+            ToastUtils.showToast(MyApplication.getContext(), "幻灯片播放速度小于1000ms");
+            return null;
+        }
         return etSpeed.getText().toString().trim();
     }
 
     public String getTypeText() {
         return typeText;
-    }
-
-    public void setEditSpeed () {
-        etSpeed.setText("");
-        etSpeed.setFocusable(true);
-        etSpeed.setFocusableInTouchMode(true);
     }
 
     /**
@@ -83,6 +118,16 @@ public class SlideDialog extends Dialog {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
+            if (CustomUtil.isTouchPointInView(btnConfirm, (int) ev.getRawX(), (int) ev.getY()) &&
+                    (etSpeed.getText().toString().length() == 0 || Integer.parseInt(etSpeed.getText().toString()) < 1000)) {
+                Log.e(TAG, "isOn btnConfirm");
+                etSpeed.setFocusable(true);
+                etSpeed.setFocusableInTouchMode(true);
+                etSpeed.requestFocus();
+                InputMethodManager inputManager = (InputMethodManager) etSpeed.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(etSpeed, 0);
+                return super.dispatchTouchEvent(ev);
+            }
             if (CustomUtil.isShouldHideInput(v, ev)) {
                 //点击editText控件外部
                 InputMethodManager imm = (InputMethodManager) MyApplication.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

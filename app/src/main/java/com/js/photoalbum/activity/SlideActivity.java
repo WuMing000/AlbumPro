@@ -53,6 +53,8 @@ public class SlideActivity extends BaseActivity {
     private ScheduledExecutorService scheduledExecutorService;
     private LinearLayoutManager linearLayoutManager;
 
+    private int slideSpeed;
+
     private Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void dispatchMessage(@NonNull Message msg) {
@@ -82,6 +84,14 @@ public class SlideActivity extends BaseActivity {
         mList = new ArrayList<>();
         rvSlide = findViewById(R.id.rv_slide);
         tvTime = findViewById(R.id.tv_time);
+
+        if (MyApplication.getSlideSpeed().length() == 0) {
+            slideSpeed = 10000;
+        } else {
+            slideSpeed = Integer.parseInt(MyApplication.getSlideSpeed());
+        }
+        Log.e(TAG, "slideSpeed:" + slideSpeed);
+//        slideSpeed = getIntent().getIntExtra("slideSpeed", 10000);
 
         adapter = new SlideRecyclerViewAdapter(this, mList);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -167,7 +177,7 @@ public class SlideActivity extends BaseActivity {
             public void run() {
                 rvSlide.smoothScrollToPosition(linearLayoutManager.findFirstVisibleItemPosition() + 1);
             }
-        }, 5000, 5000, TimeUnit.MILLISECONDS);
+        }, slideSpeed, slideSpeed, TimeUnit.MILLISECONDS);
 
         registerUpdateTimeReceiver();
     }
