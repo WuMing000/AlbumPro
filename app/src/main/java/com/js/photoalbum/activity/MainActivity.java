@@ -176,6 +176,9 @@ public class MainActivity extends BaseActivity {
         initListener();
         initList();
         currentAlbum = tvNature.getText().toString();
+        btnNature.setStrokeWidth(6);
+        btnNature.setStrokeColor(getResources().getColor(R.color.purple_500));
+        tvNature.setTextColor(getResources().getColor(R.color.purple_500));
 
         float curTranslationX = llSlide.getTranslationX();
         animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
@@ -248,6 +251,13 @@ public class MainActivity extends BaseActivity {
         btnNature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnNature.invalidate();
+                btnLocal.invalidate();
+                btnNature.setStrokeWidth(6);
+                btnNature.setStrokeColor(getResources().getColor(R.color.purple_500));
+                tvNature.setTextColor(getResources().getColor(R.color.purple_500));
+                btnLocal.setStrokeWidth(0);
+                tvLocal.setTextColor(getResources().getColor(R.color.gray));
                 ToastUtils.cancelToast();
                 if (tvNature.getText().toString().equals(currentAlbum)) {
                     ToastUtils.showToast(MainActivity.this, "正在操作该分类");
@@ -279,6 +289,13 @@ public class MainActivity extends BaseActivity {
         btnLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnNature.invalidate();
+                btnLocal.invalidate();
+                btnLocal.setStrokeWidth(6);
+                btnLocal.setStrokeColor(getResources().getColor(R.color.purple_500));
+                tvLocal.setTextColor(getResources().getColor(R.color.purple_500));
+                btnNature.setStrokeWidth(0);
+                tvNature.setTextColor(getResources().getColor(R.color.gray));
                 ToastUtils.cancelToast();
                 if (tvLocal.getText().toString().equals(currentAlbum)) {
                     ToastUtils.showToast(MainActivity.this, "正在操作该分类");
