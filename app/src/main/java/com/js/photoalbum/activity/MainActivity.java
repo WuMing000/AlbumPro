@@ -160,6 +160,8 @@ public class MainActivity extends BaseActivity {
         tvNature = findViewById(R.id.tv_nature);
         tvLocal = findViewById(R.id.tv_local);
 
+        ivGaussBlur.setImageResource(R.mipmap.nature_default);
+
         slideList = MyApplication.getPhotoList();
 
         adapter = new PhotoRecyclerViewAdapter(this, mList);
@@ -257,7 +259,7 @@ public class MainActivity extends BaseActivity {
                 btnNature.setStrokeColor(getResources().getColor(R.color.purple_500));
                 tvNature.setTextColor(getResources().getColor(R.color.purple_500));
                 btnLocal.setStrokeWidth(0);
-                tvLocal.setTextColor(getResources().getColor(R.color.gray));
+                tvLocal.setTextColor(getResources().getColor(R.color.white));
                 ToastUtils.cancelToast();
                 if (tvNature.getText().toString().equals(currentAlbum)) {
                     ToastUtils.showToast(MainActivity.this, "正在操作该分类");
@@ -295,7 +297,7 @@ public class MainActivity extends BaseActivity {
                 btnLocal.setStrokeColor(getResources().getColor(R.color.purple_500));
                 tvLocal.setTextColor(getResources().getColor(R.color.purple_500));
                 btnNature.setStrokeWidth(0);
-                tvNature.setTextColor(getResources().getColor(R.color.gray));
+                tvNature.setTextColor(getResources().getColor(R.color.white));
                 ToastUtils.cancelToast();
                 if (tvLocal.getText().toString().equals(currentAlbum)) {
                     ToastUtils.showToast(MainActivity.this, "正在操作该分类");

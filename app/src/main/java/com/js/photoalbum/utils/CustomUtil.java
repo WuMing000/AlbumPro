@@ -99,14 +99,14 @@ public class CustomUtil {
     }
 
     public static boolean isTouchPointInView(@NotNull View view, int x, int y) {
-//        Log.e(TAG, "x:" + x + ",y:" + y);
+        Log.e(TAG, "x:" + x + ",y:" + y);
         int[] location = new int[2];
         view.getLocationInWindow(location);
         int left = location[0];
         int top = location[1];
-        int right = left + view.getMeasuredWidth();
-        int bottom = top + view.getMeasuredHeight();
-//        Log.e(TAG, "left:" + left + ",right:" + right + ",top:" + top + ",bottom:" + bottom);
+        int right = left + view.getWidth();
+        int bottom = top + view.getHeight();
+        Log.e(TAG, "left:" + left + ",right:" + right + ",top:" + top + ",bottom:" + bottom);
         if (top <= y) {
             if (bottom >= y && x >= left && x <= right) {
                 return true;

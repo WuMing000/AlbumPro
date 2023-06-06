@@ -118,7 +118,7 @@ public class SlideDialog extends Dialog {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if (CustomUtil.isTouchPointInView(btnConfirm, (int) ev.getRawX(), (int) ev.getY()) &&
+            if (CustomUtil.isTouchPointInView(btnConfirm, (int) ev.getX(), (int) ev.getY()) &&
                     (etSpeed.getText().toString().length() == 0 || Integer.parseInt(etSpeed.getText().toString()) < 1000)) {
                 Log.e(TAG, "isOn btnConfirm");
                 etSpeed.setFocusable(true);

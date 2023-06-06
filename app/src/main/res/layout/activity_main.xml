@@ -42,8 +42,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:gravity="center_horizontal">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="30dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -54,8 +55,8 @@
 
                 <com.js.photoalbum.view.CircleImageView
                     android:id="@+id/btn_nature"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:src="@drawable/nature_circle"
                     android:scaleType="centerCrop" />
 
@@ -64,7 +65,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="自然风景"
-                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:layout_marginTop="5dp"/>
 
             </LinearLayout>
@@ -78,8 +80,8 @@
 
                 <com.js.photoalbum.view.CircleImageView
                     android:id="@+id/btn_local"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:src="@drawable/local_circle"
                     android:scaleType="centerCrop" />
 
@@ -88,7 +90,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="本机照片"
-                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:layout_marginTop="5dp"/>
 
             </LinearLayout>
