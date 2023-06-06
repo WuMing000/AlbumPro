@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+@SuppressLint("LongLogTag")
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.MyViewHolder> {
+
+    private final static String TAG = "PhotoRecyclerViewAdapter===========>";
 
     private Context mContext;
     private List<PhotoBean> mList;
@@ -57,6 +61,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerViewAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Log.e(TAG, mList.size() + "");
         String s = mList.get(position).getImgUrl();
         String imgAuthor = mList.get(position).getImgAuthor();
         String imgName = mList.get(position).getImgName();
