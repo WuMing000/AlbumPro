@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.js.photoalbum.bean.PhotoBean;
+import com.js.photoalbum.bean.SlideTypeBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,33 @@ public class PhotoListDataSaveUtils {
         value = gson.fromJson(strJson, new TypeToken<String>() {
         }.getType());
         return value;
+    }
+
+    /**
+     * 保存对象
+     *
+     * @param typeName
+     * @param value
+     */
+    public void setDataBean(String typeName, String idName, SlideTypeBean value) {
+        if (value == null) {
+            return;
+        }
+        editor.clear();
+        editor.putString(typeName, value.getSlideType());
+        editor.putInt(idName, value.getSlideId());
+        editor.commit();
+    }
+
+    /**
+     * 获取对象
+     * @param typeName
+     * @return
+     */
+    public SlideTypeBean getDataBean(String typeName, String idName) {
+        String slideType = preferences.getString(typeName, null);
+        int slideId = preferences.getInt(idName, 0);
+        return new SlideTypeBean(slideId, slideType);
     }
 
     /**

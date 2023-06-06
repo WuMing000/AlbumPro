@@ -30,6 +30,7 @@ import com.js.photoalbum.R;
 import com.js.photoalbum.adapter.PhotoRecyclerViewAdapter;
 import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.bean.PhotoServerBean;
+import com.js.photoalbum.bean.SlideTypeBean;
 import com.js.photoalbum.manager.CenterZoomLayoutManager;
 import com.js.photoalbum.manager.Contact;
 import com.js.photoalbum.manager.HorizontalDecoration;
@@ -412,6 +413,9 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         String editSpeed = slideDialog.getEditSpeed();
+                        SlideTypeBean slideType = slideDialog.getSlideType();
+                        MyApplication.setSlideType(slideType);
+                        Log.e(TAG, slideType.getSlideId() + "," + slideType.getSlideType());
                         if (editSpeed == null) {
                             Log.d(TAG, "edittext is null!");
                         } else {
@@ -420,16 +424,6 @@ public class MainActivity extends BaseActivity {
                             MyApplication.setSlideSpeed(editSpeed);
 //                            slideSpeed = Integer.parseInt(editSpeed);
                         }
-                        String typeId = slideDialog.getTypeText();
-//                        if (editSpeed != null && Integer.parseInt(editSpeed) > 20000) {
-//                            ToastUtils.showToast(MainActivity.this, "超过最大限制，请重新输入！");
-//                            slideDialog.setEditSpeed();
-//                            Log.e(TAG, editSpeed);
-//                        }
-//                        else {
-////                            slideDialog.dismiss();
-//                        }
-                        Log.e(TAG, typeId + "");
                     }
                 });
                 slideDialog.setCancelOnClickListener(new View.OnClickListener() {

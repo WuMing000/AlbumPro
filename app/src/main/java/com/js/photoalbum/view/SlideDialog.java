@@ -3,7 +3,6 @@ package com.js.photoalbum.view;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,8 +17,11 @@ import android.widget.RadioGroup;
 
 import com.js.photoalbum.MyApplication;
 import com.js.photoalbum.R;
+import com.js.photoalbum.bean.SlideTypeBean;
 import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -31,27 +33,42 @@ public class SlideDialog extends Dialog {
 
     private EditText etSpeed;
     private RadioGroup rgType;
-    private RadioButton rbFadeIn, rbCube;
+    private RadioButton rbSmooth, rbReduce;
     private Button btnConfirm, btnCancel;
-    private String typeText = "淡入";
+    private String slideType;
+    private int slideId;
 
     public SlideDialog(@NonNull Context context) {
         super(context, R.style.dialog_soft_input);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_slide, null);
         etSpeed = view.findViewById(R.id.et_speed);
         rgType = view.findViewById(R.id.rg_type);
-        rbFadeIn = view.findViewById(R.id.rb_fade_in);
-        rbCube = view.findViewById(R.id.rb_cube);
+        rbSmooth = view.findViewById(R.id.rb_smooth);
+        rbReduce = view.findViewById(R.id.rb_reduce);
         btnConfirm = view.findViewById(R.id.btn_confirm);
         btnCancel = view.findViewById(R.id.btn_cancel);
+
+        if (MyApplication.getSlideType().getSlideType() == null) {
+            slideType = "平滑";
+            slideId = R.id.rb_smooth;
+        } else {
+            slideType = MyApplication.getSlideType().getSlideType();
+            slideId = MyApplication.getSlideType().getSlideId();
+            rgType.check(slideId);
+        }
+
+        etSpeed.setText(MyApplication.getSlideSpeed());
+
         rgType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 Log.e("TAG", checkedId + "");
-                if (checkedId == rbFadeIn.getId()) {
-                    typeText = rbFadeIn.getText().toString();
-                } else if (checkedId == rbCube.getId()) {
-                    typeText = rbCube.getText().toString();
+                if (checkedId == rbSmooth.getId()) {
+                    slideType = rbSmooth.getText().toString();
+                    slideId = checkedId;
+                } else if (checkedId == rbReduce.getId()) {
+                    slideType = rbReduce.getText().toString();
+                    slideId = checkedId;
                 }
             }
         });
@@ -104,8 +121,8 @@ public class SlideDialog extends Dialog {
         return etSpeed.getText().toString().trim();
     }
 
-    public String getTypeText() {
-        return typeText;
+    public SlideTypeBean getSlideType() {
+        return new SlideTypeBean(slideId, slideType);
     }
 
     /**
@@ -117,6 +134,7 @@ public class SlideDialog extends Dialog {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancelToast();
             View v = getCurrentFocus();
             if (CustomUtil.isTouchPointInView(btnConfirm, (int) ev.getX(), (int) ev.getY()) &&
                     (etSpeed.getText().toString().length() == 0 || Integer.parseInt(etSpeed.getText().toString()) < 1000)) {

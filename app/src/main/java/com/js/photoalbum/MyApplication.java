@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.js.photoalbum.bean.PhotoBean;
+import com.js.photoalbum.bean.SlideTypeBean;
 import com.js.photoalbum.utils.PhotoListDataSaveUtils;
 
 import java.util.List;
@@ -13,7 +14,8 @@ public class MyApplication extends Application {
 
     private static Context mContext;
     private static PhotoListDataSaveUtils photoListDataSaveUtils;
-    private static PhotoListDataSaveUtils slideDataSaveUtils;
+    private static PhotoListDataSaveUtils slideSpeedSaveUtils;
+    private static PhotoListDataSaveUtils slideTypeSaveUtils;
 
     private static List<PhotoBean> photoList;
 
@@ -28,11 +30,19 @@ public class MyApplication extends Application {
     }
 
     public static String getSlideSpeed() {
-        return slideDataSaveUtils.getDataString("slideSpeed");
+        return slideSpeedSaveUtils.getDataString("slideSpeed");
     }
 
     public static void setSlideSpeed(String slideSpeed) {
-        slideDataSaveUtils.setDataString("slideSpeed", slideSpeed);
+        slideSpeedSaveUtils.setDataString("slideSpeed", slideSpeed);
+    }
+
+    public static SlideTypeBean getSlideType() {
+        return slideTypeSaveUtils.getDataBean("slideType", "slideId");
+    }
+
+    public static void setSlideType(SlideTypeBean slideTypeBean) {
+        slideTypeSaveUtils.setDataBean("slideType", "slideId", slideTypeBean);
     }
 
     public static Context getContext() {
@@ -48,6 +58,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         photoListDataSaveUtils = new PhotoListDataSaveUtils(mContext, "photo_list_data");
-        slideDataSaveUtils = new PhotoListDataSaveUtils(mContext, "slide_list_data");
+        slideSpeedSaveUtils = new PhotoListDataSaveUtils(mContext, "slide_speed_data");
+        slideTypeSaveUtils = new PhotoListDataSaveUtils(mContext, "slide_type_data");
     }
 }
