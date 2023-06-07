@@ -72,6 +72,7 @@ public class MainActivity extends BaseActivity {
     private static final int ADAPTER_CHANGED = 0x003;
     private static final int UPDATE_VERSION_DIFFERENT = 0x004;
     private static final int UPDATE_VERSION_SAME = 0x005;
+    private static final int NETWORK_NO_CONNECT = 0x006;
 
     private RecyclerView rvPhoto;
     private PhotoRecyclerViewAdapter adapter;
@@ -129,6 +130,10 @@ public class MainActivity extends BaseActivity {
 
 //                    mList.add(new PhotoBean(path, name, author));
                     localList.add(new PhotoBean(path, name, author));
+                    if (!CustomUtil.isNetworkAvailable(MainActivity.this)) {
+                        mList.addAll(localList);
+                        adapter.notifyDataSetChanged();
+                    }
                     adapter.notifyDataSetChanged();
 //                rvPhoto.smoothScrollToPosition(0);
 //                }
@@ -246,6 +251,9 @@ public class MainActivity extends BaseActivity {
                 case UPDATE_VERSION_SAME:
                     Log.e(TAG, "版本号一致");
                     break;
+                case NETWORK_NO_CONNECT:
+                    ToastUtils.showToast(MainActivity.this, "网络未连接，请先连接网络");
+                    break;
             }
         }
     };
@@ -311,6 +319,10 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 super.run();
                 String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
+                if (serverFile.length() == 0) {
+                    handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
+                    return;
+                }
                 String localVersionName = CustomUtil.getLocalVersionName();
                 if (localVersionName.equals(serverFile)) {
                     handler.sendEmptyMessageAtTime(UPDATE_VERSION_SAME, 100);
@@ -359,33 +371,37 @@ public class MainActivity extends BaseActivity {
             }
         }.start();
 
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_NATURE_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_GIRL_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PLANT_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SCENIC_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CUSTOM_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SKY_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CARTOON_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CAR_PHOTO);
-                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PAINT_PHOTO);
-            }
-        }.start();
-
-        bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
-        bottomBeanList.add(new BottomBean(R.drawable.girl_circle, "养眼美女"));
-        bottomBeanList.add(new BottomBean(R.drawable.plant_circle, "护眼绿色"));
+        if (CustomUtil.isNetworkAvailable(this)) {
+            bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
+            bottomBeanList.add(new BottomBean(R.drawable.girl_circle, "养眼美女"));
+            bottomBeanList.add(new BottomBean(R.drawable.plant_circle, "护眼绿色"));
 //        bottomBeanList.add(new BottomBean(R.drawable.scenic_circle, "名胜古迹"));
 //        bottomBeanList.add(new BottomBean(R.drawable.custom_circle, "风土人情"));
-        bottomBeanList.add(new BottomBean(R.drawable.sky_circle, "璀璨星空"));
-        bottomBeanList.add(new BottomBean(R.drawable.cartoon_circle, "热血动漫"));
-        bottomBeanList.add(new BottomBean(R.drawable.car_circle, "时尚汽车"));
-        bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
-        bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
-        bottomRecyclerViewAdapter.notifyDataSetChanged();
+            bottomBeanList.add(new BottomBean(R.drawable.sky_circle, "璀璨星空"));
+            bottomBeanList.add(new BottomBean(R.drawable.cartoon_circle, "热血动漫"));
+            bottomBeanList.add(new BottomBean(R.drawable.car_circle, "时尚汽车"));
+            bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
+            bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
+            bottomRecyclerViewAdapter.notifyDataSetChanged();
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_NATURE_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_GIRL_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PLANT_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SCENIC_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CUSTOM_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SKY_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CARTOON_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CAR_PHOTO);
+                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PAINT_PHOTO);
+                }
+            }.start();
+        } else {
+            bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
+            bottomRecyclerViewAdapter.notifyDataSetChanged();
+        }
 
     }
 

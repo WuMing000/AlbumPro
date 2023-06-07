@@ -53,7 +53,7 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
             holder.ivSlide.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         if (mList.size() == 0) {
-            ToastUtils.showToast(mContext, "幻灯片为空，请先添加幻灯片");
+            ToastUtils.showToast(mContext, "幻灯片为空，请先添加幻灯片（长按图片可添加）");
             Intent intent = new Intent(mContext, MainActivity.class);
             mContext.startActivity(intent);
         } else {
