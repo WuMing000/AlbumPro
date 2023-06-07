@@ -2,6 +2,7 @@ package com.js.photoalbum.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -14,7 +15,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.js.photoalbum.R;
+import com.js.photoalbum.activity.MainActivity;
 import com.js.photoalbum.bean.PhotoBean;
+import com.js.photoalbum.utils.CustomUtil;
+import com.js.photoalbum.utils.ToastUtils;
 
 import java.util.List;
 
@@ -48,18 +52,24 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
         } else {
             holder.ivSlide.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
-        String s = mList.get(position % mList.size()).getImgUrl();
-        Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                holder.ivSlide.setImageDrawable(resource);
-            }
+        if (mList.size() == 0) {
+            ToastUtils.showToast(mContext, "幻灯片为空，请先添加幻灯片");
+            Intent intent = new Intent(mContext, MainActivity.class);
+            mContext.startActivity(intent);
+        } else {
+            String s = mList.get(position % mList.size()).getImgUrl();
+            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
+                @Override
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                    holder.ivSlide.setImageDrawable(resource);
+                }
 
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override
