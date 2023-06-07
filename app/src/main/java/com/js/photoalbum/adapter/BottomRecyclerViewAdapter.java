@@ -31,6 +31,7 @@ public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecycl
     private List<BottomBean> mList;
 
     private OnItemClickListener onItemClickListener;
+    private OnLongItemClickListener onLongItemClickListener;
 
     private int savePosition = 0;
 
@@ -75,6 +76,14 @@ public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecycl
             }
         });
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onLongItemClickListener.onClick(position);
+                return true;
+            }
+        });
+
     }
 
     @Override
@@ -100,6 +109,14 @@ public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecycl
     }
 
     public interface OnItemClickListener {
+        void onClick(int position);
+    }
+
+    public void setOnLongItemClickListener(OnLongItemClickListener longItemClickListener) {
+        this.onLongItemClickListener = longItemClickListener;
+    }
+
+    public interface OnLongItemClickListener {
         void onClick(int position);
     }
 }

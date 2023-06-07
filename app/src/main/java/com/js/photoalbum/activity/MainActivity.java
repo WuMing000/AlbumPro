@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -675,77 +676,12 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-//        btnNature.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                btnNature.invalidate();
-//                btnLocal.invalidate();
-//                btnNature.setStrokeWidth(6);
-//                btnNature.setStrokeColor(getResources().getColor(R.color.purple_500));
-//                tvNature.setTextColor(getResources().getColor(R.color.purple_500));
-//                btnLocal.setStrokeWidth(0);
-//                tvLocal.setTextColor(getResources().getColor(R.color.white));
-//                ToastUtils.cancelToast();
-//                if (tvNature.getText().toString().equals(currentAlbum)) {
-//                    ToastUtils.showToast(MainActivity.this, "正在操作该分类");
-////                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    currentAlbum = tvNature.getText().toString();
-//                    mList.clear();
-////                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-////                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-////                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-////                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-////                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-////                mList.add(Contact.SERVER_URL + "1.jpg");
-//                    if (natureList.size() != 0) {
-//                        mList.addAll(natureList);
-//                    }
-//                    adapter.notifyDataSetChanged();
-////                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
-//                    if (currentPosition == 0) {
-//                        rvPhoto.smoothScrollToPosition(0);
-//                        rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-//                    } else {
-//                        rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-//                    }
-//                }
-//            }
-//        });
-//
-//        btnLocal.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                btnNature.invalidate();
-//                btnLocal.invalidate();
-//                btnLocal.setStrokeWidth(6);
-//                btnLocal.setStrokeColor(getResources().getColor(R.color.purple_500));
-//                tvLocal.setTextColor(getResources().getColor(R.color.purple_500));
-//                btnNature.setStrokeWidth(0);
-//                tvNature.setTextColor(getResources().getColor(R.color.white));
-//                ToastUtils.cancelToast();
-//                if (tvLocal.getText().toString().equals(currentAlbum)) {
-//                    ToastUtils.showToast(MainActivity.this, "正在操作该分类");
-////                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    currentAlbum = tvLocal.getText().toString();
-////                    adapter.notifyDataSetChanged();
-//                    mList.clear();
-//                    if (localList.size() != 0) {
-//                        mList.addAll(localList);
-//                    }
-//                    adapter.notifyDataSetChanged();
-//                    if (currentPosition == 0) {
-//                        rvPhoto.smoothScrollToPosition(0);
-//                        rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-//                    } else {
-//                        rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-//                    }
-////                    initList();
-//                }
-////                adapter.notifyDataSetChanged();
-//            }
-//        });
+        bottomRecyclerViewAdapter.setOnLongItemClickListener(new BottomRecyclerViewAdapter.OnLongItemClickListener() {
+            @Override
+            public void onClick(int position) {
+//                Toast.makeText(MainActivity.this, "你长按了" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         adapter.setOnItemLongClickListener(new PhotoRecyclerViewAdapter.OnItemLongClickListener() {
             @Override
@@ -868,6 +804,7 @@ public class MainActivity extends BaseActivity {
                 if (slideList.size() != 0) {
                     slideList.clear();
                     adapter.notifyDataSetChanged();
+                    rvPhoto.smoothScrollBy(-10, 0);
                     MyApplication.setPhotoList(slideList);
                     ToastUtils.showToast(MainActivity.this, "已清空幻灯片，请重新添加");
                 } else {
@@ -900,24 +837,25 @@ public class MainActivity extends BaseActivity {
                 currentPosition = (lastVisibleItemPosition + firstVisibleItemPosition) / 2;
             }
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (currentPosition != -1) {
-                        Glide.with(MyApplication.getContext()).load(mList.get(currentPosition).getImgUrl()).skipMemoryCache(false).dontAnimate().apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 3))).into(new CustomTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                ivGaussBlur.setImageDrawable(resource);
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                            }
-                        });
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                }
+//            });
+            if (currentPosition != -1) {
+                Glide.with(MyApplication.getContext()).load(mList.get(currentPosition).getImgUrl()).skipMemoryCache(false).dontAnimate().apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 3))).into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        ivGaussBlur.setImageDrawable(resource);
                     }
-                }
-            });
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+            }
 
             Log.e(TAG, firstVisibleItemPosition + "," + lastVisibleItemPosition + "," + currentPosition);
             float midpoint = recyclerView.getWidth() / 2.f;
