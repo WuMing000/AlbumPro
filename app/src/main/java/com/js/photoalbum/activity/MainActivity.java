@@ -29,18 +29,24 @@ import com.js.photoalbum.R;
 import com.js.photoalbum.adapter.BottomRecyclerViewAdapter;
 import com.js.photoalbum.adapter.PhotoRecyclerViewAdapter;
 import com.js.photoalbum.bean.BottomBean;
+import com.js.photoalbum.bean.DownBean;
+import com.js.photoalbum.bean.DownProgressBean;
 import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.bean.PhotoServerBean;
 import com.js.photoalbum.bean.SlideTypeBean;
 import com.js.photoalbum.manager.CenterZoomLayoutManager;
 import com.js.photoalbum.manager.Contact;
 import com.js.photoalbum.manager.HorizontalDecoration;
+import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
 import com.js.photoalbum.view.SlideDialog;
+import com.js.photoalbum.view.UpdateDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
@@ -63,6 +69,8 @@ public class MainActivity extends BaseActivity {
 
     private static final int GET_PHOTO = 0x002;
     private static final int ADAPTER_CHANGED = 0x003;
+    private static final int UPDATE_VERSION_DIFFERENT = 0x004;
+    private static final int UPDATE_VERSION_SAME = 0x005;
 
     private RecyclerView rvPhoto;
     private PhotoRecyclerViewAdapter adapter;
@@ -70,6 +78,13 @@ public class MainActivity extends BaseActivity {
     private List<PhotoBean> localList;
     private List<PhotoBean> natureList;
     private List<PhotoBean> girlList;
+    private List<PhotoBean> plantList;
+    private List<PhotoBean> scenicList;
+    private List<PhotoBean> customList;
+    private List<PhotoBean> skyList;
+    private List<PhotoBean> cartoonList;
+    private List<PhotoBean> carList;
+    private List<PhotoBean> paintList;
     private List<PhotoBean> slideList;
 
     private LinearLayout llSlide;
@@ -94,6 +109,7 @@ public class MainActivity extends BaseActivity {
     private AlertDialog dialog;
 
     private ObjectAnimator animator;
+    private UpdateDialog updateDialog;
 
 //    private int slideSpeed;
 
@@ -141,12 +157,93 @@ public class MainActivity extends BaseActivity {
                                     girlList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
                                 }
+                            } else if ("plant".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    plantList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
+                            } else if ("scenic".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    scenicList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
+                            } else if ("custom".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    customList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
+                            } else if ("sky".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    skyList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
+                            } else if ("cartoon".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    cartoonList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
+                            } else if ("car".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    carList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
+                            } else if ("paint".equals(list.get(0).getPhotoType())) {
+                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    paintList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+                                }
                             }
                         }
                     }.start();
                     break;
                 case ADAPTER_CHANGED:
                     adapter.notifyDataSetChanged();
+                    break;
+                case UPDATE_VERSION_DIFFERENT:
+                    Log.e(TAG, "版本号不一致");
+                    updateDialog = new UpdateDialog(MainActivity.this);
+                    updateDialog.setMessage("相册有新版本！！！");
+                    updateDialog.setTitleVisible(View.GONE);
+                    updateDialog.setExitOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CustomUtil.killAppProcess();
+                        }
+                    });
+                    updateDialog.setUpdateOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            updateDialog.setProgressVisible(View.VISIBLE);
+                            updateDialog.setButtonVisible(View.GONE);
+                            DownBean downBean = CustomUtil.updateAPK(Contact.SERVER_URL + ":8080/test/js_project/album/js_photoalbum.apk");
+                            Timer timer = new Timer();
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    DownProgressBean downProgressBean = CustomUtil.updateProgress(downBean.getDownloadId(), timer);
+                                    Log.e(TAG, downProgressBean.getProgress());
+                                    float progress = Float.parseFloat(downProgressBean.getProgress());
+                                    if (progress == 100.00) {
+                                        updateDialog.dismiss();
+                                    }
+                                    updateDialog.setPbProgress((int) progress);
+                                    updateDialog.setTvProgress(downProgressBean.getProgress());
+                                }
+                            }, 0, 1000);
+                        }
+                    });
+                    updateDialog.setCancelable(false);
+                    updateDialog.show();
+                    break;
+                case UPDATE_VERSION_SAME:
+                    Log.e(TAG, "版本号一致");
                     break;
             }
         }
@@ -161,6 +258,13 @@ public class MainActivity extends BaseActivity {
         localList = new ArrayList<>();
         natureList = new ArrayList<>();
         girlList = new ArrayList<>();
+        plantList = new ArrayList<>();
+        scenicList = new ArrayList<>();
+        customList = new ArrayList<>();
+        skyList = new ArrayList<>();
+        cartoonList = new ArrayList<>();
+        carList = new ArrayList<>();
+        paintList = new ArrayList<>();
         slideList = new ArrayList<>();
         bottomBeanList = new ArrayList<>();
         rvPhoto = findViewById(R.id.rv_photo);
@@ -201,6 +305,20 @@ public class MainActivity extends BaseActivity {
         animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
         animator.setDuration(500);
 
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
+                String localVersionName = CustomUtil.getLocalVersionName();
+                if (localVersionName.equals(serverFile)) {
+                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_SAME, 100);
+                } else {
+                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_DIFFERENT, 100);
+                }
+            }
+        }.start();
+
     }
 
     @Override
@@ -240,11 +358,31 @@ public class MainActivity extends BaseActivity {
             }
         }.start();
 
-        getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_NATURE_PHOTO);
-        getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_GIRL_PHOTO);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_NATURE_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_GIRL_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PLANT_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SCENIC_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CUSTOM_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SKY_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CARTOON_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CAR_PHOTO);
+                getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PAINT_PHOTO);
+            }
+        }.start();
 
         bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
         bottomBeanList.add(new BottomBean(R.drawable.girl_circle, "养眼美女"));
+        bottomBeanList.add(new BottomBean(R.drawable.plant_circle, "护眼绿色"));
+//        bottomBeanList.add(new BottomBean(R.drawable.scenic_circle, "名胜古迹"));
+//        bottomBeanList.add(new BottomBean(R.drawable.custom_circle, "风土人情"));
+        bottomBeanList.add(new BottomBean(R.drawable.sky_circle, "璀璨星空"));
+        bottomBeanList.add(new BottomBean(R.drawable.cartoon_circle, "热血动漫"));
+        bottomBeanList.add(new BottomBean(R.drawable.car_circle, "时尚汽车"));
+        bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
         bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
         bottomRecyclerViewAdapter.notifyDataSetChanged();
 
@@ -316,6 +454,191 @@ public class MainActivity extends BaseActivity {
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (girlList.size() != 0) {
                             mList.addAll(girlList);
+                        }
+                        adapter.notifyDataSetChanged();
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+                        if (currentPosition == 0) {
+                            rvPhoto.smoothScrollToPosition(0);
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        } else {
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        }
+                    }
+                } else if ("护眼绿色".equals(bottomBeanList.get(position).getBottomName())) {
+                    ToastUtils.cancelToast();
+                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+                    } else {
+                        currentAlbum = bottomBeanList.get(position).getBottomName();
+                        mList.clear();
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+//                mList.add(Contact.SERVER_URL + "1.jpg");
+                        if (plantList.size() != 0) {
+                            mList.addAll(plantList);
+                        }
+                        adapter.notifyDataSetChanged();
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+                        if (currentPosition == 0) {
+                            rvPhoto.smoothScrollToPosition(0);
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        } else {
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        }
+                    }
+                }
+//                else if ("名胜古迹".equals(bottomBeanList.get(position).getBottomName())) {
+//                    ToastUtils.cancelToast();
+//                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+////                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        currentAlbum = bottomBeanList.get(position).getBottomName();
+//                        mList.clear();
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+////                mList.add(Contact.SERVER_URL + "1.jpg");
+//                        if (scenicList.size() != 0) {
+//                            mList.addAll(scenicList);
+//                        }
+//                        adapter.notifyDataSetChanged();
+////                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+//                        if (currentPosition == 0) {
+//                            rvPhoto.smoothScrollToPosition(0);
+//                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+//                        } else {
+//                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+//                        }
+//                    }
+//                }
+//                else if ("风土人情".equals(bottomBeanList.get(position).getBottomName())) {
+//                    ToastUtils.cancelToast();
+//                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+////                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        currentAlbum = bottomBeanList.get(position).getBottomName();
+//                        mList.clear();
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+////                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+////                mList.add(Contact.SERVER_URL + "1.jpg");
+//                        if (customList.size() != 0) {
+//                            mList.addAll(customList);
+//                        }
+//                        adapter.notifyDataSetChanged();
+////                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+//                        if (currentPosition == 0) {
+//                            rvPhoto.smoothScrollToPosition(0);
+//                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+//                        } else {
+//                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+//                        }
+//                    }
+//                }
+                else if ("璀璨星空".equals(bottomBeanList.get(position).getBottomName())) {
+                    ToastUtils.cancelToast();
+                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+                    } else {
+                        currentAlbum = bottomBeanList.get(position).getBottomName();
+                        mList.clear();
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+//                mList.add(Contact.SERVER_URL + "1.jpg");
+                        if (skyList.size() != 0) {
+                            mList.addAll(skyList);
+                        }
+                        adapter.notifyDataSetChanged();
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+                        if (currentPosition == 0) {
+                            rvPhoto.smoothScrollToPosition(0);
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        } else {
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        }
+                    }
+                } else if ("热血动漫".equals(bottomBeanList.get(position).getBottomName())) {
+                    ToastUtils.cancelToast();
+                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+                    } else {
+                        currentAlbum = bottomBeanList.get(position).getBottomName();
+                        mList.clear();
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+//                mList.add(Contact.SERVER_URL + "1.jpg");
+                        if (cartoonList.size() != 0) {
+                            mList.addAll(cartoonList);
+                        }
+                        adapter.notifyDataSetChanged();
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+                        if (currentPosition == 0) {
+                            rvPhoto.smoothScrollToPosition(0);
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        } else {
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        }
+                    }
+                } else if ("时尚汽车".equals(bottomBeanList.get(position).getBottomName())) {
+                    ToastUtils.cancelToast();
+                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+                    } else {
+                        currentAlbum = bottomBeanList.get(position).getBottomName();
+                        mList.clear();
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+//                mList.add(Contact.SERVER_URL + "1.jpg");
+                        if (carList.size() != 0) {
+                            mList.addAll(carList);
+                        }
+                        adapter.notifyDataSetChanged();
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
+                        if (currentPosition == 0) {
+                            rvPhoto.smoothScrollToPosition(0);
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        } else {
+                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
+                        }
+                    }
+                } else if ("世界名画".equals(bottomBeanList.get(position).getBottomName())) {
+                    ToastUtils.cancelToast();
+                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
+                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
+                    } else {
+                        currentAlbum = bottomBeanList.get(position).getBottomName();
+                        mList.clear();
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
+//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
+//                mList.add(Contact.SERVER_URL + "1.jpg");
+                        if (paintList.size() != 0) {
+                            mList.addAll(paintList);
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -547,6 +870,8 @@ public class MainActivity extends BaseActivity {
                     adapter.notifyDataSetChanged();
                     MyApplication.setPhotoList(slideList);
                     ToastUtils.showToast(MainActivity.this, "已清空幻灯片，请重新添加");
+                } else {
+                    ToastUtils.showToast(MainActivity.this, "幻灯片为空，无法进行操作");
                 }
             }
         });
@@ -630,6 +955,9 @@ public class MainActivity extends BaseActivity {
         }
         if (dialog != null) {
             dialog.dismiss();
+        }
+        if (updateDialog != null) {
+            updateDialog.dismiss();
         }
     }
 

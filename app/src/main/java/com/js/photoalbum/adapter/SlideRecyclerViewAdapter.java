@@ -2,6 +2,7 @@ package com.js.photoalbum.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,13 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
 
     @Override
     public void onBindViewHolder(@NonNull SlideRecyclerViewAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
+        int ori = mConfiguration.orientation; //获取屏幕方向
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            holder.ivSlide.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            holder.ivSlide.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
         String s = mList.get(position % mList.size()).getImgUrl();
         Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
             @Override
