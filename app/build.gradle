@@ -26,6 +26,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                output ->
+                    def outputFile = output.outputFile
+                    if (outputFile.name.contains("debug")){
+                        outputFileName = new File(defaultConfig.applicationId + "_" + defaultConfig.versionName + ".apk")
+                    }
+                    if (outputFile.name.contains("release")){
+                        outputFileName = new File(defaultConfig.applicationId + "_" + defaultConfig.versionName + ".apk")
+                    }
+            }
+    }
 }
 
 dependencies {
