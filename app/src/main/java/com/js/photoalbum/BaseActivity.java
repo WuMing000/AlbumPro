@@ -76,12 +76,12 @@ public class BaseActivity extends Activity {
         finishAll();
         // 这个主要是用来关闭进程的, 关把所有activity finish
         // 的话，进程是不会关闭的
-        try {
-            Thread.sleep(800);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        System.exit(0);
+//        try {
+//            Thread.sleep(800);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        System.exit(0);
     }
 
 }

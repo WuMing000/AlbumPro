@@ -55,11 +55,16 @@ public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecycl
 
         if (savePosition == position) {
             holder.ivName.setStrokeWidth(6);
-            holder.ivName.setStrokeColor(mContext.getResources().getColor(R.color.purple_500));
-            holder.tvName.setTextColor(mContext.getResources().getColor(R.color.purple_500));
+            holder.ivName.setStrokeColor(mContext.getResources().getColor(R.color.white));
+            holder.tvName.setTextColor(mContext.getResources().getColor(R.color.white));
+            holder.tvName.getPaint().setFakeBoldText(true);
+            holder.tvName.setTextSize(16);
+            holder.ivName.setTranslationY(-10);
         } else {
             holder.ivName.setStrokeWidth(0);
-            holder.tvName.setTextColor(mContext.getResources().getColor(R.color.white));
+            holder.tvName.setTextColor(mContext.getResources().getColor(R.color.light_white));
+            holder.tvName.getPaint().setFakeBoldText(false);
+            holder.tvName.setTextSize(14);
         }
 
         Log.e("Bottom", savePosition + "");

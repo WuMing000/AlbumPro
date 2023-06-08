@@ -244,6 +244,8 @@ public class SlideActivity extends BaseActivity {
             if (v > 100) {
                 finish();
             }
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            finish();
         }
 
         return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);

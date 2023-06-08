@@ -11,13 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/btn_back"
+    <ImageView
+        android:id="@+id/iv_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="返回"
-        android:textColor="@color/white"
-        android:background="@drawable/selector_btn_bg"
-        android:layout_margin="30dp"/>
+        android:src="@drawable/back_circle"
+        android:layout_margin="50dp"/>
 
 </FrameLayout>

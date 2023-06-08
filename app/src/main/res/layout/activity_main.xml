@@ -22,8 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp">
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
 
             <ImageView
                 android:id="@+id/iv_back"
@@ -99,7 +99,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_bottom"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp" />
 
@@ -114,17 +114,17 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="50dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginRight="50dp"
         android:background="@drawable/selector_btn_bg"
-        android:text="幻灯片"
-        android:textColor="@color/white" />
+        android:text="画框"
+        android:textColor="@color/black" />
 
     <LinearLayout
         android:id="@+id/ll_slide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="50dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/btn_slide"
         android:layout_marginTop="5dp"
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_slide_bg"
-            android:text="播放幻灯片"
+            android:text="播放画框"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:textColor="@color/black"/>
@@ -146,7 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_slide_bg"
-            android:text="设置幻灯片"
+            android:text="设置画框"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:textColor="@color/black"/>
@@ -156,7 +156,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_slide_bg"
-            android:text="清空幻灯片"
+            android:text="清空画框"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:textColor="@color/black"/>

@@ -709,7 +709,7 @@ public class MainActivity extends BaseActivity {
                     if (photoBean.getImgUrl().equals(bean.getImgUrl())) {
                         isAdd = true;
                         dialog = new AlertDialog.Builder(MainActivity.this)
-                                .setMessage("该图片已添加到幻灯片，是否移除？")
+                                .setMessage("该图片已添加到画框，是否移除？")
                                 .setCancelable(false)
                                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                                     @Override
@@ -732,7 +732,7 @@ public class MainActivity extends BaseActivity {
                 }
                 if (!isAdd) {
                     dialog = new AlertDialog.Builder(MainActivity.this)
-                            .setMessage("是否将该图片添加到幻灯片")
+                            .setMessage("是否将该图片添加到画框")
                             .setCancelable(false)
                             .setPositiveButton("是", new DialogInterface.OnClickListener() {
                                 @Override
@@ -770,7 +770,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 llSlide.setVisibility(View.GONE);
                 if (slideList.size() == 0) {
-                    ToastUtils.showToast(MainActivity.this, "请长按图片添加图片到幻灯片");
+                    ToastUtils.showToast(MainActivity.this, "请长按图片添加到画框");
                 } else {
                     Intent intent = new Intent(MainActivity.this, SlideActivity.class);
 //                    intent.putExtra("slideSpeed", slideSpeed);
@@ -822,9 +822,9 @@ public class MainActivity extends BaseActivity {
                     adapter.notifyDataSetChanged();
                     rvPhoto.smoothScrollBy(-10, 0);
                     MyApplication.setPhotoList(slideList);
-                    ToastUtils.showToast(MainActivity.this, "已清空幻灯片，请重新添加");
+                    ToastUtils.showToast(MainActivity.this, "已清空画框，请重新添加");
                 } else {
-                    ToastUtils.showToast(MainActivity.this, "幻灯片为空，无法进行操作");
+                    ToastUtils.showToast(MainActivity.this, "画框为空，无法进行操作");
                 }
             }
         });
@@ -898,6 +898,8 @@ public class MainActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
         Log.e(TAG, "onRestart");
+        adapter.notifyDataSetChanged();
+        rvPhoto.smoothScrollBy(-10, 0);
 //        initList();
     }
 

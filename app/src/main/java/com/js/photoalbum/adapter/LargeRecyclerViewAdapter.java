@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -30,6 +31,7 @@ public class LargeRecyclerViewAdapter extends RecyclerView.Adapter<LargeRecycler
 
     private Context mContext;
     private List<PhotoBean> mList;
+    private OnLongItemClickListener onLongItemClickListener;
 
     public LargeRecyclerViewAdapter(Context mContext, List<PhotoBean> mList) {
         this.mContext = mContext;
@@ -64,6 +66,14 @@ public class LargeRecyclerViewAdapter extends RecyclerView.Adapter<LargeRecycler
 
             }
         });
+
+        holder.ivLarge.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onLongItemClickListener.onClick(position, mList.get(position));
+                return true;
+            }
+        });
     }
 
     @Override
@@ -79,5 +89,13 @@ public class LargeRecyclerViewAdapter extends RecyclerView.Adapter<LargeRecycler
             super(itemView);
             ivLarge = itemView.findViewById(R.id.iv_large);
         }
+    }
+
+    public void setOnLongItemClickListener(OnLongItemClickListener longItemClickListener) {
+        this.onLongItemClickListener = longItemClickListener;
+    }
+
+    public interface OnLongItemClickListener {
+        void onClick(int position, PhotoBean photoBean);
     }
 }

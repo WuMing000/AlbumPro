@@ -48,6 +48,7 @@ public class SlideDialog extends Dialog {
         btnConfirm = view.findViewById(R.id.btn_confirm);
         btnCancel = view.findViewById(R.id.btn_cancel);
 
+        Log.e(TAG, "type=" + MyApplication.getSlideType().getSlideType());
         if (MyApplication.getSlideType().getSlideType() == null) {
             slideType = "平滑";
             slideId = R.id.rb_smooth;
