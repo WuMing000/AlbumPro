@@ -44,8 +44,6 @@ public class SlideActivity extends BaseActivity {
     private SlideRecyclerViewAdapter adapter;
     private List<PhotoBean> mList;
 
-    private float downY, moveY;
-
     private ScheduledExecutorService scheduledExecutorService;
     private LinearLayoutManager linearLayoutManager;
 
@@ -232,19 +230,29 @@ public class SlideActivity extends BaseActivity {
         }
     };
 
+    private boolean isMoveDown = false;
+    private float downY, moveY;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             downY = ev.getRawY();
+            isMoveDown = false;
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
             moveY = ev.getRawY();
-            float v = Math.abs(downY - moveY);
+            float v = downY - moveY;
+            Log.e(TAG, v + "");
+            if (v < 0) {
+                isMoveDown = true;
+            }
+        } else if (ev.getAction() == MotionEvent.ACTION_UP && !isMoveDown) {
+            float v = downY - moveY;
             Log.e(TAG, v + "");
             if (v > 100) {
                 finish();
+                overridePendingTransition(0, R.anim.slide_out_from_bottom);
+                return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
             }
-        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             finish();
         }
 

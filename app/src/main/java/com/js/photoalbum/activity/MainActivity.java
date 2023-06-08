@@ -776,6 +776,7 @@ public class MainActivity extends BaseActivity {
 //                    intent.putExtra("slideSpeed", slideSpeed);
 //                    intent.putParcelableArrayListExtra("slideList", (ArrayList<PhotoBean>) slideList);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_from_bottom, 0);
                 }
             }
         });
