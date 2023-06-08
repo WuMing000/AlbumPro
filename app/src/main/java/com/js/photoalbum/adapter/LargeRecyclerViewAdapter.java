@@ -55,7 +55,7 @@ public class LargeRecyclerViewAdapter extends RecyclerView.Adapter<LargeRecycler
             holder.ivLarge.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
         String s = mList.get(position).getImgUrl();
-        Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
+        Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate().into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 holder.ivLarge.setImageDrawable(resource);
@@ -66,6 +66,7 @@ public class LargeRecyclerViewAdapter extends RecyclerView.Adapter<LargeRecycler
 
             }
         });
+//        Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate().placeholder(holder.ivLarge.getDrawable()).into(holder.ivLarge);
 
         holder.ivLarge.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

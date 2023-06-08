@@ -231,18 +231,21 @@ public class SlideActivity extends BaseActivity {
     };
 
     private boolean isMoveDown = false;
-    private float downY, moveY;
+    private float downY, moveY, downX, moveX;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            downY = ev.getRawY();
             isMoveDown = false;
+            downY = ev.getRawY();
+            downX = ev.getRawX();
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
             moveY = ev.getRawY();
+            moveX = ev.getRawX();
+            float abs = Math.abs(downX - moveX);
             float v = downY - moveY;
             Log.e(TAG, v + "");
-            if (v < 0) {
+            if (v < 0 || abs > 100) {
                 isMoveDown = true;
             }
         } else if (ev.getAction() == MotionEvent.ACTION_UP && !isMoveDown) {

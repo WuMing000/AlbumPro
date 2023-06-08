@@ -19,19 +19,25 @@
             android:name=".activity.CheckPermissionActivity"
             android:screenOrientation="unspecified"
             android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="true"
+            android:screenOrientation="unspecified"
+            android:theme="@style/MyThemeFullScreen"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="false"
-            android:screenOrientation="unspecified"
-            android:theme="@style/MyThemeFullScreen"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <activity
             android:name=".activity.SlideActivity"

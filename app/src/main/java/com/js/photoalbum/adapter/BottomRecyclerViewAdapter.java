@@ -65,6 +65,7 @@ public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecycl
             holder.tvName.setTextColor(mContext.getResources().getColor(R.color.light_white));
             holder.tvName.getPaint().setFakeBoldText(false);
             holder.tvName.setTextSize(14);
+            holder.ivName.setTranslationY(0);
         }
 
         Log.e("Bottom", savePosition + "");

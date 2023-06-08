@@ -58,17 +58,18 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
             mContext.startActivity(intent);
         } else {
             String s = mList.get(position % mList.size()).getImgUrl();
-            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
-                @Override
-                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                    holder.ivSlide.setImageDrawable(resource);
-                }
-
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                }
-            });
+//            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
+//                @Override
+//                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                    holder.ivSlide.setImageDrawable(resource);
+//                }
+//
+//                @Override
+//                public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//                }
+//            });
+            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(holder.ivSlide.getDrawable()).into(holder.ivSlide);
         }
     }
 

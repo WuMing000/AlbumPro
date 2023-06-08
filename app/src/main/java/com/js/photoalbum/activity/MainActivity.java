@@ -2,21 +2,24 @@ package com.js.photoalbum.activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -286,9 +289,7 @@ public class MainActivity extends BaseActivity {
         llSlide = findViewById(R.id.ll_slide);
         rvBottom = findViewById(R.id.rv_bottom);
 
-        ivGaussBlur.setImageResource(R.mipmap.nature_default);
-
-        slideList = MyApplication.getPhotoList();
+//        ivGaussBlur.setImageResource(R.mipmap.nature_default);
 
         adapter = new PhotoRecyclerViewAdapter(this, mList);
         centerZoomLayoutManager = new CenterZoomLayoutManager(this, RecyclerView.HORIZONTAL, false);
@@ -308,11 +309,14 @@ public class MainActivity extends BaseActivity {
         currentAlbum = "自然风景";
 
         initListener();
-        initList();
 
-        float curTranslationX = llSlide.getTranslationX();
-        animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
-        animator.setDuration(500);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                initList();
+            }
+        }.start();
 
         new Thread() {
             @Override
@@ -343,66 +347,213 @@ public class MainActivity extends BaseActivity {
 
     private void initList() {
 
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-                while (cursor.moveToNext()) {
-                    //获取图片的名称
-                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-                    @SuppressLint("Range") String author = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.AUTHOR));
-                    // 获取图片的绝对路径
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    String path = cursor.getString(column_index);
-                    Log.i("GetImagesPath", "GetImagesPath: name = "+name+"  path = "+ path);
-//                    mList.add(path);
-//                    adapter.notifyDataSetChanged();
-                    Message message = new Message();
-                    message.what = 0x001;
-                    Bundle bundle = new Bundle();
-                    bundle.putString("path", path);
-                    bundle.putString("name", name);
-                    bundle.putString("author", author);
-                    message.obj = bundle;
-                    handler.sendMessageAtTime(message, 100);
-                }
-                cursor.close();
-            }
-        }.start();
+        slideList = MyApplication.getPhotoList();
+        float curTranslationX = llSlide.getTranslationX();
+        animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
+        animator.setDuration(500);
 
-        if (CustomUtil.isNetworkAvailable(this)) {
-            bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
-            bottomBeanList.add(new BottomBean(R.drawable.girl_circle, "养眼美女"));
-            bottomBeanList.add(new BottomBean(R.drawable.plant_circle, "护眼绿色"));
+        bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
+        bottomBeanList.add(new BottomBean(R.drawable.girl_circle, "养眼美女"));
+        bottomBeanList.add(new BottomBean(R.drawable.plant_circle, "护眼绿色"));
 //        bottomBeanList.add(new BottomBean(R.drawable.scenic_circle, "名胜古迹"));
 //        bottomBeanList.add(new BottomBean(R.drawable.custom_circle, "风土人情"));
-            bottomBeanList.add(new BottomBean(R.drawable.sky_circle, "璀璨星空"));
-            bottomBeanList.add(new BottomBean(R.drawable.cartoon_circle, "热血动漫"));
-            bottomBeanList.add(new BottomBean(R.drawable.car_circle, "时尚汽车"));
-            bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
-            bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
-            bottomRecyclerViewAdapter.notifyDataSetChanged();
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_NATURE_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_GIRL_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PLANT_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SCENIC_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CUSTOM_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SKY_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CARTOON_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CAR_PHOTO);
-                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PAINT_PHOTO);
-                }
-            }.start();
-        } else {
-            bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
-            bottomRecyclerViewAdapter.notifyDataSetChanged();
-        }
+        bottomBeanList.add(new BottomBean(R.drawable.sky_circle, "璀璨星空"));
+//        bottomBeanList.add(new BottomBean(R.drawable.cartoon_circle, "热血动漫"));
+        bottomBeanList.add(new BottomBean(R.drawable.car_circle, "时尚汽车"));
+//        bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
+        bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
+        bottomRecyclerViewAdapter.notifyDataSetChanged();
 
+        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+        while (cursor.moveToNext()) {
+            //获取图片的名称
+            @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+            @SuppressLint("Range") String author = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.AUTHOR));
+            // 获取图片的绝对路径
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            String path = cursor.getString(column_index);
+            Log.i("GetImagesPath", "GetImagesPath: name = "+name+"  path = "+ path);
+//                    mList.add(path);
+//                    adapter.notifyDataSetChanged();
+            Message message = new Message();
+            message.what = 0x001;
+            Bundle bundle = new Bundle();
+            bundle.putString("path", path);
+            bundle.putString("name", name);
+            bundle.putString("author", author);
+            message.obj = bundle;
+            handler.sendMessageAtTime(message, 100);
+        }
+        cursor.close();
+
+//        if (CustomUtil.isNetworkAvailable(this)) {
+//            new Thread() {
+//                @Override
+//                public void run() {
+//                    super.run();
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_NATURE_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_GIRL_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PLANT_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SCENIC_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CUSTOM_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_SKY_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CARTOON_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_CAR_PHOTO);
+//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PAINT_PHOTO);
+//                }
+//            }.start();
+//        } else {
+//            bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
+//            bottomRecyclerViewAdapter.notifyDataSetChanged();
+//        }
+
+        //nature
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_1).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_2).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_3).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_4).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_5).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_6).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_7).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_8).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_9).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_10).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_11).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_12).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_13).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_14).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_15).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_16).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_17).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_18).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_19).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_20).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_21).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_22).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_23).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_24).toString(), "", ""));
+        natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_25).toString(), "", ""));
+
+        //girl
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_1).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_2).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_3).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_4).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_5).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_6).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_7).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_8).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_9).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_10).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_11).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_12).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_13).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_14).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_15).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_16).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_17).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_18).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_19).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_20).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_21).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_22).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_23).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_24).toString(), "", ""));
+        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_25).toString(), "", ""));
+
+        //green
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_1).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_2).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_3).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_4).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_5).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_6).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_7).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_8).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_9).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_10).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_11).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_12).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_13).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_14).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_15).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_16).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_17).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_18).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_19).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_20).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_21).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_22).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_23).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_24).toString(), "", ""));
+        plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_25).toString(), "", ""));
+
+        //sky
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_1).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_2).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_3).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_4).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_5).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_6).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_7).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_8).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_9).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_10).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_11).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_12).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_13).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_14).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_15).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_16).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_17).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_18).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_19).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_20).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_21).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_22).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_23).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_24).toString(), "", ""));
+        skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_25).toString(), "", ""));
+
+        //cartoon
+        cartoonList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_25).toString(), "", ""));
+
+        //car
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_1).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_2).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_3).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_4).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_5).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_6).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_7).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_8).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_9).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_10).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_11).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_12).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_13).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_14).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_15).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_16).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_17).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_18).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_19).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_20).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_21).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_22).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_23).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_24).toString(), "", ""));
+        carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_25).toString(), "", ""));
+
+        mList.addAll(natureList);
+        handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+
+    }
+
+    public static final String RESOURCE = "android.resource://";
+
+    public static Uri idToUri(Context context, int resourceId) {
+        return Uri.parse(RESOURCE + context.getPackageName() + "/" + resourceId);
     }
 
     private void initListener() {
@@ -959,4 +1110,21 @@ public class MainActivity extends BaseActivity {
         }.start();
     }
 
+    /**
+     * 使editText点击外部时候失去焦点
+     *
+     * @param ev 触屏事件
+     * @return 事件是否被消费
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            if (!CustomUtil.isTouchPointInView(llSlide, (int) ev.getX(), (int) ev.getY())) {
+                llSlide.setVisibility(View.GONE);
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        // 必不可少，否则所有的组件都不会有TouchEvent了
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
 }
