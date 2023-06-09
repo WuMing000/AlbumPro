@@ -378,7 +378,7 @@ public class MainActivity extends BaseActivity {
         animator.setDuration(500);
 
         bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
-        bottomBeanList.add(new BottomBean(R.drawable.girl_circle, "养眼美女"));
+        bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
         bottomBeanList.add(new BottomBean(R.drawable.plant_circle, "护眼绿色"));
 //        bottomBeanList.add(new BottomBean(R.drawable.scenic_circle, "名胜古迹"));
 //        bottomBeanList.add(new BottomBean(R.drawable.custom_circle, "风土人情"));
@@ -485,6 +485,12 @@ public class MainActivity extends BaseActivity {
         girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_23).toString(), "", ""));
         girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_24).toString(), "", ""));
         girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_25).toString(), "", ""));
+
+        //paint
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_1).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_2).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_3).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_4).toString(), "", ""));
 
         //green
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_1).toString(), "", ""));
