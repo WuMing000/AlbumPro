@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.js.photoalbum.R;
 import com.js.photoalbum.activity.MainActivity;
 import com.js.photoalbum.bean.PhotoBean;
@@ -69,7 +71,15 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
 //
 //                }
 //            });
-            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(holder.ivSlide.getDrawable()).into(holder.ivSlide);
+
+//            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(holder.ivSlide.getDrawable()).into(holder.ivSlide);
+            Uri uri;
+            if (s.contains("storage")) {
+                uri = Uri.parse("file://" + s);
+            } else {
+                uri = Uri.parse(s);
+            }
+            holder.ivSlide.setImageURI(uri);
         }
     }
 
@@ -80,7 +90,7 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivSlide;
+        private SimpleDraweeView ivSlide;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -260,6 +261,29 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        rvPhoto.setOnFlingListener(null);
+        LinearSnapHelper mLinearSnapHelper = new LinearSnapHelper();//让recyclerview的item居中的方法
+        mLinearSnapHelper.attachToRecyclerView(rvPhoto);//将该类绑定到相应的recyclerview上
+//        mLinearSnapHelper.calculateScrollDistance(100, 100);
+        rvPhoto.addItemDecoration(new HorizontalDecoration(0));
+        rvPhoto.setAdapter(adapter);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                rvPhoto.smoothScrollBy(1, 0);
+            }
+        }.start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1005,25 +1029,24 @@ public class MainActivity extends BaseActivity {
                 currentPosition = (lastVisibleItemPosition + firstVisibleItemPosition) / 2;
             }
 
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                }
-//            });
-            if (currentPosition != -1) {
-                Glide.with(MyApplication.getContext()).load(mList.get(currentPosition).getImgUrl()).skipMemoryCache(false).dontAnimate().apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 3))).into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        ivGaussBlur.setImageDrawable(resource);
-                    }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (currentPosition != -1) {
+                        Glide.with(MyApplication.getContext()).load(mList.get(currentPosition).getImgUrl()).skipMemoryCache(false).dontAnimate().apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 3))).into(new CustomTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                ivGaussBlur.setImageDrawable(resource);
+                            }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
 
+                            }
+                        });
                     }
-                });
-            }
+                }
+            });
 
             Log.e(TAG, firstVisibleItemPosition + "," + lastVisibleItemPosition + "," + currentPosition);
             float midpoint = recyclerView.getWidth() / 2.f;
@@ -1058,6 +1081,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e(TAG, "onDestroy");
+//        if (mList.size() != 0) {
+//            mList.clear();
+//            isScroll = true;
+//        }
         if (mOnScrollListener != null) {
             rvPhoto.removeOnScrollListener(mOnScrollListener);
         }

@@ -31,7 +31,9 @@
             android:exported="true"
             android:screenOrientation="unspecified"
             android:theme="@style/MyThemeFullScreen"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,13 +45,15 @@
             android:name=".activity.SlideActivity"
             android:exported="true"
             android:screenOrientation="unspecified"
-            android:theme="@style/MyThemeFullScreen" />
+            android:theme="@style/MyThemeFullScreen"
+            android:launchMode="singleTop"/>
 
         <activity
             android:name=".activity.ImageLargeActivity"
             android:exported="false"
             android:screenOrientation="unspecified"
-            android:theme="@style/MyThemeFullScreen" />
+            android:theme="@style/MyThemeFullScreen"
+            android:launchMode="singleTop"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

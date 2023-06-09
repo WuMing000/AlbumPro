@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.bean.SlideTypeBean;
 import com.js.photoalbum.utils.PhotoListDataSaveUtils;
@@ -56,6 +57,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fresco.initialize(this);
         mContext = getApplicationContext();
         photoListDataSaveUtils = new PhotoListDataSaveUtils(mContext, "photo_list_data");
         slideSpeedSaveUtils = new PhotoListDataSaveUtils(mContext, "slide_speed_data");

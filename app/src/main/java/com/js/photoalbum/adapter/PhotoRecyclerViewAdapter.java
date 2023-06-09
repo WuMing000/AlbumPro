@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.js.photoalbum.MyApplication;
 import com.js.photoalbum.R;
 import com.js.photoalbum.activity.ImageLargeActivity;
@@ -79,7 +81,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 //        RequestOptions options = new RequestOptions()
 //                .priority(Priority.HIGH) //优先级
 //                .transform(new GlideRoundTransformation(8)); //圆角
-        Glide.with(mContext).load(s).apply(RequestOptions.bitmapTransform(new RoundedCorners(15))).placeholder(R.mipmap.loading_image).into(holder.ivPhoto);
+//        Glide.with(mContext).load(s).apply(RequestOptions.bitmapTransform(new RoundedCorners(15))).placeholder(R.mipmap.loading_image).into(holder.ivPhoto);
 
         holder.tvImageName.setText(newName);
         holder.tvImageAuthor.setText(imgAuthor);
@@ -101,6 +103,13 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 //
 //            }
 //        });
+        Uri uri;
+        if (s.contains("storage")) {
+            uri = Uri.parse("file://" + s);
+        } else {
+            uri = Uri.parse(s);
+        }
+        holder.ivPhoto.setImageURI(uri);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +134,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivPhoto;
+        private SimpleDraweeView ivPhoto;
         private CardView cvImage;
         private ImageView ivRightSlide;
         private TextView tvImageName;
