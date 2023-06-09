@@ -134,10 +134,10 @@ public class MainActivity extends BaseActivity {
 
 //                    mList.add(new PhotoBean(path, name, author));
                     localList.add(new PhotoBean(path, name, author));
-                    if (!CustomUtil.isNetworkAvailable(MainActivity.this)) {
-                        mList.addAll(localList);
-                        adapter.notifyDataSetChanged();
-                    }
+//                    if (!CustomUtil.isNetworkAvailable(MainActivity.this)) {
+//                        mList.addAll(localList);
+//                        adapter.notifyDataSetChanged();
+//                    }
                     adapter.notifyDataSetChanged();
 //                rvPhoto.smoothScrollToPosition(0);
 //                }
@@ -329,6 +329,7 @@ public class MainActivity extends BaseActivity {
 //        mLinearSnapHelper.calculateScrollDistance(100, 100);
         rvPhoto.addItemDecoration(new HorizontalDecoration(0));
         rvPhoto.setAdapter(adapter);
+        rvPhoto.addOnScrollListener(mOnScrollListener);
 
         currentAlbum = "自然风景";
 
@@ -581,8 +582,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initListener() {
-
-        rvPhoto.addOnScrollListener(mOnScrollListener);
         adapter.setOnItemClickListener(new PhotoRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
