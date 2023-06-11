@@ -491,6 +491,26 @@ public class MainActivity extends BaseActivity {
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_3).toString(), "", ""));
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_4).toString(), "", ""));
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_5).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_6).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_7).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_8).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_9).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_10).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_11).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_12).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_13).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_14).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_15).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_16).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_17).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_18).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_19).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_20).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_21).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_22).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_23).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_24).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_25).toString(), "", ""));
 
         //green
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_1).toString(), "", ""));
