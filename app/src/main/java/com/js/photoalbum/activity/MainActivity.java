@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -491,6 +490,7 @@ public class MainActivity extends BaseActivity {
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_2).toString(), "", ""));
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_3).toString(), "", ""));
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_4).toString(), "", ""));
+        paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_5).toString(), "", ""));
 
         //green
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_1).toString(), "", ""));
