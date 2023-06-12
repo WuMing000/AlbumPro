@@ -47,13 +47,13 @@ public class LargeRecyclerViewAdapter extends RecyclerView.Adapter<LargeRecycler
 
     @Override
     public void onBindViewHolder(@NonNull LargeRecyclerViewAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
-        int ori = mConfiguration.orientation; //获取屏幕方向
-        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
-            holder.ivLarge.setScaleType(ImageView.ScaleType.FIT_XY);
-        } else {
-            holder.ivLarge.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        }
+//        Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
+//        int ori = mConfiguration.orientation; //获取屏幕方向
+//        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+//            holder.ivLarge.setScaleType(ImageView.ScaleType.FIT_XY);
+//        } else {
+//            holder.ivLarge.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//        }
         String s = mList.get(position).getImgUrl();
         Glide.with(mContext).load(s).skipMemoryCache(false).dontAnimate().into(new CustomTarget<Drawable>() {
             @Override

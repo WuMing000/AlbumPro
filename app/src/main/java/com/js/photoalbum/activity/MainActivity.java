@@ -82,14 +82,23 @@ public class MainActivity extends BaseActivity {
     private List<PhotoBean> mList;
     private List<PhotoBean> localList;
     private List<PhotoBean> natureList;
+    private List<PhotoBean> naturePortraitList;
     private List<PhotoBean> girlList;
+    private List<PhotoBean> girlPortraitList;
     private List<PhotoBean> plantList;
+    private List<PhotoBean> plantPortraitList;
     private List<PhotoBean> scenicList;
+    private List<PhotoBean> scenicPortraitList;
     private List<PhotoBean> customList;
+    private List<PhotoBean> customPortraitList;
     private List<PhotoBean> skyList;
+    private List<PhotoBean> skyPortraitList;
     private List<PhotoBean> cartoonList;
+    private List<PhotoBean> cartoonPortraitList;
     private List<PhotoBean> carList;
+    private List<PhotoBean> carPortraitList;
     private List<PhotoBean> paintList;
+    private List<PhotoBean> paintPortraitList;
     private List<PhotoBean> slideList;
 
     private LinearLayout llSlide;
@@ -266,12 +275,50 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.e(TAG, "onConfigurationChanged:position:" + currentPosition);
+        Log.e(TAG, "onConfigurationChanged:position:" + currentBottomPosition);
+        Configuration mConfiguration = getResources().getConfiguration(); //获取设置的配置信息
+        int ori = mConfiguration.orientation; //获取屏幕方向
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            if (currentBottomPosition == 0) {
+                mList.clear();
+                mList.addAll(natureList);
+            } else if (currentBottomPosition == 1) {
+                mList.clear();
+                mList.addAll(paintList);
+            } else if (currentBottomPosition == 2) {
+                mList.clear();
+                mList.addAll(plantList);
+            } else if (currentBottomPosition == 3) {
+                mList.clear();
+                mList.addAll(skyList);
+            } else if (currentBottomPosition == 4) {
+                mList.clear();
+                mList.addAll(carList);
+            }
+        } else {
+            if (currentBottomPosition == 0) {
+                mList.clear();
+                mList.addAll(naturePortraitList);
+            } else if (currentBottomPosition == 1) {
+                mList.clear();
+                mList.addAll(paintPortraitList);
+            } else if (currentBottomPosition == 2) {
+                mList.clear();
+                mList.addAll(plantPortraitList);
+            } else if (currentBottomPosition == 3) {
+                mList.clear();
+                mList.addAll(skyPortraitList);
+            } else if (currentBottomPosition == 4) {
+                mList.clear();
+                mList.addAll(carPortraitList);
+            }
+        }
         rvPhoto.setOnFlingListener(null);
         LinearSnapHelper mLinearSnapHelper = new LinearSnapHelper();//让recyclerview的item居中的方法
         mLinearSnapHelper.attachToRecyclerView(rvPhoto);//将该类绑定到相应的recyclerview上
 //        mLinearSnapHelper.calculateScrollDistance(100, 100);
         rvPhoto.addItemDecoration(new HorizontalDecoration(0));
+//        adapter = new PhotoRecyclerViewAdapter(MainActivity.this, mList);
         rvPhoto.setAdapter(adapter);
         new Thread() {
             @Override
@@ -305,6 +352,17 @@ public class MainActivity extends BaseActivity {
         paintList = new ArrayList<>();
         slideList = new ArrayList<>();
         bottomBeanList = new ArrayList<>();
+
+        naturePortraitList = new ArrayList<>();
+        girlPortraitList = new ArrayList<>();
+        plantPortraitList = new ArrayList<>();
+        scenicPortraitList = new ArrayList<>();
+        customPortraitList = new ArrayList<>();
+        skyPortraitList = new ArrayList<>();
+        cartoonPortraitList = new ArrayList<>();
+        carPortraitList = new ArrayList<>();
+        paintPortraitList = new ArrayList<>();
+
         rvPhoto = findViewById(R.id.rv_photo);
         ivGaussBlur = findViewById(R.id.iv_gauss_blur);
         ivBack = findViewById(R.id.iv_back);
@@ -462,6 +520,18 @@ public class MainActivity extends BaseActivity {
         natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_24).toString(), "", ""));
         natureList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_25).toString(), "", ""));
 
+        //nature-portrait
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_1).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_2).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_3).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_4).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_5).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_6).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_7).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_8).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_9).toString(), "", ""));
+        naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_10).toString(), "", ""));
+
         //girl
         girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_1).toString(), "", ""));
         girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_2).toString(), "", ""));
@@ -543,6 +613,19 @@ public class MainActivity extends BaseActivity {
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_24).toString(), "", ""));
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_25).toString(), "", ""));
 
+        //green-portrait
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_1).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_2).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_3).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_4).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_5).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_6).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_7).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_8).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_9).toString(), "", ""));
+        plantPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_portrait_10).toString(), "", ""));
+
+
         //sky
         skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_1).toString(), "", ""));
         skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_2).toString(), "", ""));
@@ -570,8 +653,17 @@ public class MainActivity extends BaseActivity {
         skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_24).toString(), "", ""));
         skyList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_25).toString(), "", ""));
 
-        //cartoon
-        cartoonList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_25).toString(), "", ""));
+        //sky-portrait
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_1).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_2).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_3).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_4).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_5).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_6).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_7).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_8).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_9).toString(), "", ""));
+        skyPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.sky_portrait_10).toString(), "", ""));
 
         //car
         carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_1).toString(), "", ""));
@@ -600,7 +692,25 @@ public class MainActivity extends BaseActivity {
         carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_24).toString(), "", ""));
         carList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_25).toString(), "", ""));
 
-        mList.addAll(natureList);
+        //car-portrait
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_1).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_2).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_3).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_4).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_5).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_6).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_7).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_8).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_9).toString(), "", ""));
+        carPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.car_portrait_10).toString(), "", ""));
+
+        Configuration mConfiguration = getResources().getConfiguration();
+        int ori = mConfiguration.orientation; //获取屏幕方向
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            mList.addAll(natureList);
+        } else {
+            mList.addAll(naturePortraitList);
+        }
         handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
 
     }
@@ -633,7 +743,9 @@ public class MainActivity extends BaseActivity {
         bottomRecyclerViewAdapter.setOnItemClickListener(new BottomRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                currentPosition = position;
+                Configuration mConfiguration = getResources().getConfiguration(); //获取设置的配置信息
+                int ori = mConfiguration.orientation; //获取屏幕方向
+                currentBottomPosition = position;
                 rvPhoto.smoothScrollToPosition(0);
                 if ("自然风景".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
@@ -650,7 +762,11 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (natureList.size() != 0) {
-                            mList.addAll(natureList);
+                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+                                mList.addAll(natureList);
+                            } else {
+                                mList.addAll(naturePortraitList);
+                            }
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -702,7 +818,11 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (plantList.size() != 0) {
-                            mList.addAll(plantList);
+                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+                                mList.addAll(plantList);
+                            } else {
+                                mList.addAll(plantPortraitList);
+                            }
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -783,7 +903,11 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (skyList.size() != 0) {
-                            mList.addAll(skyList);
+                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+                                mList.addAll(skyList);
+                            } else {
+                                mList.addAll(skyPortraitList);
+                            }
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -809,7 +933,11 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (cartoonList.size() != 0) {
-                            mList.addAll(cartoonList);
+                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+                                mList.addAll(cartoonList);
+                            } else {
+                                mList.addAll(cartoonPortraitList);
+                            }
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -835,7 +963,11 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (carList.size() != 0) {
-                            mList.addAll(carList);
+                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+                                mList.addAll(carList);
+                            } else {
+                                mList.addAll(carPortraitList);
+                            }
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -861,7 +993,11 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
 //                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (paintList.size() != 0) {
-                            mList.addAll(paintList);
+                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+                                mList.addAll(paintList);
+                            } else {
+                                mList.addAll(paintPortraitList);
+                            }
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);

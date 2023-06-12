@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
@@ -53,7 +54,15 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @NonNull
     @Override
     public PhotoRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_photo, parent, false);
+        Log.e(TAG, "wuwuwuwuwu");
+        View view;
+        Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
+        int ori = mConfiguration.orientation; //获取屏幕方向
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_photo, parent, false);
+        } else {
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_photo_portrait, parent, false);
+        }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
         params.width = width / 2;
