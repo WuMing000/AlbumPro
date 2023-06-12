@@ -223,7 +223,7 @@ public class MainActivity extends BaseActivity {
                     updateDialog.setExitOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            CustomUtil.killAppProcess();
+                            updateDialog.dismiss();
                         }
                     });
                     updateDialog.setUpdateOnClickListener(new View.OnClickListener() {
