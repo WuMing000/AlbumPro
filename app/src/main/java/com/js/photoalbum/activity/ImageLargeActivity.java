@@ -181,12 +181,17 @@ public class ImageLargeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ToastUtils.cancelToast();
+    protected void onStop() {
+        super.onStop();
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ToastUtils.cancelToast();
     }
 
 //    @Override

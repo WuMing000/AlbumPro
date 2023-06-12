@@ -1104,6 +1104,18 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop");
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+        if (updateDialog != null) {
+            updateDialog.dismiss();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "onDestroy");
@@ -1113,12 +1125,6 @@ public class MainActivity extends BaseActivity {
 //        }
         if (mOnScrollListener != null) {
             rvPhoto.removeOnScrollListener(mOnScrollListener);
-        }
-        if (dialog != null) {
-            dialog.dismiss();
-        }
-        if (updateDialog != null) {
-            updateDialog.dismiss();
         }
     }
 
