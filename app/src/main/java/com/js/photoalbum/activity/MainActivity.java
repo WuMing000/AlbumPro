@@ -116,6 +116,8 @@ public class MainActivity extends BaseActivity {
     private ObjectAnimator animator;
     private UpdateDialog updateDialog;
 
+    private int currentBottomPosition;
+
 //    private int slideSpeed;
 
     private Handler handler = new Handler(Looper.myLooper()) {
@@ -264,6 +266,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        Log.e(TAG, "onConfigurationChanged:position:" + currentPosition);
         rvPhoto.setOnFlingListener(null);
         LinearSnapHelper mLinearSnapHelper = new LinearSnapHelper();//让recyclerview的item居中的方法
         mLinearSnapHelper.attachToRecyclerView(rvPhoto);//将该类绑定到相应的recyclerview上
@@ -331,6 +334,7 @@ public class MainActivity extends BaseActivity {
         rvPhoto.addOnScrollListener(mOnScrollListener);
 
         currentAlbum = "自然风景";
+        currentPosition = 0;
 
         initListener();
 
@@ -629,6 +633,8 @@ public class MainActivity extends BaseActivity {
         bottomRecyclerViewAdapter.setOnItemClickListener(new BottomRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
+                currentPosition = position;
+                rvPhoto.smoothScrollToPosition(0);
                 if ("自然风景".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
