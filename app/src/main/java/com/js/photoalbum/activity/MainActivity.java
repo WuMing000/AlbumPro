@@ -325,7 +325,7 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 super.run();
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
