@@ -7,17 +7,17 @@
     tools:ignore="MissingDefaultResource">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/selector_linearlayout_bg">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/ll_add_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:background="@drawable/selector_photo_linearlayout_first_bg">
 
             <ImageView
                 android:id="@+id/iv_add_photo"
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/icon_shift_out"
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp" />
 
             <Button
                 android:id="@+id/btn_add_photo"
@@ -50,10 +50,11 @@
 
         <LinearLayout
             android:id="@+id/ll_clear_slide"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:background="@drawable/selector_photo_linearlayout_second_bg">
 
             <ImageView
                 android:layout_width="wrap_content"
