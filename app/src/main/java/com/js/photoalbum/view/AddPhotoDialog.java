@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -29,6 +31,8 @@ public class AddPhotoDialog extends Dialog {
     private final static String TAG = "AddPhotoDialog===========>";
 
     private Button btnAddPhoto, btnClear;
+    private LinearLayout llAddPhoto, llClearSlide;
+    private ImageView ivAddPhoto;
 
     public AddPhotoDialog(@NonNull Context context) {
         super(context, R.style.dialog_soft_input);
@@ -36,8 +40,19 @@ public class AddPhotoDialog extends Dialog {
 
         btnAddPhoto = view.findViewById(R.id.btn_add_photo);
         btnClear = view.findViewById(R.id.btn_clear_slide);
+        ivAddPhoto = view.findViewById(R.id.iv_add_photo);
+        llAddPhoto = view.findViewById(R.id.ll_add_photo);
+        llClearSlide = view.findViewById(R.id.ll_clear_slide);
 
         setContentView(view);
+    }
+
+    public void setImagePhoto(boolean isAdd) {
+        if (isAdd) {
+            ivAddPhoto.setImageResource(R.mipmap.icon_shift_out);
+        } else {
+            ivAddPhoto.setImageResource(R.mipmap.icon_add);
+        }
     }
 
     public void setAddPhotoText(String text) {
@@ -45,11 +60,11 @@ public class AddPhotoDialog extends Dialog {
     }
 
     public void setAddPhotoOnClickListener(View.OnClickListener onClickListener) {
-        btnAddPhoto.setOnClickListener(onClickListener);
+        llAddPhoto.setOnClickListener(onClickListener);
     }
 
     public void setCLearOnClickListener(View.OnClickListener onClickListener) {
-        btnClear.setOnClickListener(onClickListener);
+        llClearSlide.setOnClickListener(onClickListener);
     }
 
 }

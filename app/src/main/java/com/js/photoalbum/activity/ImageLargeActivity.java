@@ -3,10 +3,13 @@ package com.js.photoalbum.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -87,6 +90,8 @@ public class ImageLargeActivity extends BaseActivity {
             public void onClick(int position, PhotoBean photoBean) {
                 isAdd = false;
                 addPhotoDialog = new AddPhotoDialog(ImageLargeActivity.this);
+                Window window = addPhotoDialog.getWindow();
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 Log.e(TAG, MyApplication.getPhotoList().toString());
                 Log.e(TAG, slideList.toString());
                 for (PhotoBean bean : MyApplication.getPhotoList()) {
@@ -100,8 +105,7 @@ public class ImageLargeActivity extends BaseActivity {
                 } else {
                     addPhotoDialog.setAddPhotoText("将该图片添加画框");
                 }
-//                Window window = addPhotoDialog.getWindow();
-//                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                addPhotoDialog.setImagePhoto(isAdd);
                 addPhotoDialog.setAddPhotoOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

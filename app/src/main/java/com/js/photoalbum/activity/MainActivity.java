@@ -1078,6 +1078,8 @@ public class MainActivity extends BaseActivity {
             public void onClick(PhotoBean photoBean, ImageView imageView) {
                 isAdd = false;
                 addPhotoDialog = new AddPhotoDialog(MainActivity.this);
+                Window window = addPhotoDialog.getWindow();
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 Log.e(TAG, MyApplication.getPhotoList().toString());
                 Log.e(TAG, slideList.toString());
                 for (PhotoBean bean : MyApplication.getPhotoList()) {
@@ -1091,8 +1093,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     addPhotoDialog.setAddPhotoText("将该图片添加画框");
                 }
-//                Window window = addPhotoDialog.getWindow();
-//                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                addPhotoDialog.setImagePhoto(isAdd);
                 addPhotoDialog.setAddPhotoOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
