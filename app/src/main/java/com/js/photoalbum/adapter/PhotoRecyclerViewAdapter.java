@@ -54,7 +54,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @NonNull
     @Override
     public PhotoRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.e(TAG, "wuwuwuwuwu");
+//        Log.e(TAG, "wuwuwuwuwu");
         View view;
         Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
         int ori = mConfiguration.orientation; //获取屏幕方向

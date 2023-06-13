@@ -17,6 +17,8 @@ import com.js.photoalbum.adapter.LargeRecyclerViewAdapter;
 import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
+import com.js.photoalbum.view.AddPhotoDialog;
+import com.js.photoalbum.view.SlideDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,8 @@ public class ImageLargeActivity extends BaseActivity {
     private LargeRecyclerViewAdapter adapter;
     private List<PhotoBean> mList;
     private List<PhotoBean> slideList;
-    private AlertDialog dialog;
+    private AddPhotoDialog addPhotoDialog;
+    boolean isAdd = false;
     private ImageView ivBack;
     private float downY, moveY;
 
@@ -82,54 +85,52 @@ public class ImageLargeActivity extends BaseActivity {
         adapter.setOnLongItemClickListener(new LargeRecyclerViewAdapter.OnLongItemClickListener() {
             @Override
             public void onClick(int position, PhotoBean photoBean) {
-                boolean isAdd = false;
+                isAdd = false;
+                addPhotoDialog = new AddPhotoDialog(ImageLargeActivity.this);
                 Log.e(TAG, MyApplication.getPhotoList().toString());
                 Log.e(TAG, slideList.toString());
                 for (PhotoBean bean : MyApplication.getPhotoList()) {
                     if (photoBean.getImgUrl().equals(bean.getImgUrl())) {
                         isAdd = true;
-                        dialog = new AlertDialog.Builder(ImageLargeActivity.this)
-                                .setMessage("该图片已添加到画框，是否移除？")
-                                .setCancelable(false)
-                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        slideList.remove(photoBean);
-                                        Log.e(TAG, slideList.toString());
-                                        MyApplication.setPhotoList(slideList);
-                                        Log.e(TAG, MyApplication.getPhotoList().toString());
-//                                        imageView.setVisibility(View.GONE);
-                                    }
-                                })
-                                .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
+                        break;
                     }
                 }
-                if (!isAdd) {
-                    dialog = new AlertDialog.Builder(ImageLargeActivity.this)
-                            .setMessage("是否将该图片添加到画框")
-                            .setCancelable(false)
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    slideList.add(photoBean);
-                                    MyApplication.setPhotoList(slideList);
-//                                    imageView.setVisibility(View.VISIBLE);
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                if (isAdd) {
+                    addPhotoDialog.setAddPhotoText("将该图片移出画框");
+                } else {
+                    addPhotoDialog.setAddPhotoText("将该图片添加画框");
                 }
+//                Window window = addPhotoDialog.getWindow();
+//                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                addPhotoDialog.setAddPhotoOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addPhotoDialog.dismiss();
+                        if (isAdd) {
+                            slideList.remove(photoBean);
+                            Log.e(TAG, slideList.toString());
+                            MyApplication.setPhotoList(slideList);
+                            Log.e(TAG, MyApplication.getPhotoList().toString());
+                        } else {
+                            slideList.add(photoBean);
+                            MyApplication.setPhotoList(slideList);
+                        }
+                    }
+                });
+                addPhotoDialog.setCLearOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addPhotoDialog.dismiss();
+                        if (slideList.size() != 0) {
+                            slideList.clear();
+                            MyApplication.setPhotoList(slideList);
+                            ToastUtils.showToast(ImageLargeActivity.this, "已清空画框，请重新添加");
+                        } else {
+                            ToastUtils.showToast(ImageLargeActivity.this, "画框为空，无法进行操作");
+                        }
+                    }
+                });
+                addPhotoDialog.show();
             }
         });
 
@@ -183,8 +184,8 @@ public class ImageLargeActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (dialog != null) {
-            dialog.dismiss();
+        if (addPhotoDialog != null) {
+            addPhotoDialog.dismiss();
         }
     }
 

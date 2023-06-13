@@ -114,54 +114,65 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="30dp"
         android:layout_marginRight="50dp"
         android:background="@drawable/selector_btn_bg"
-        android:text="画框"
+        android:text="进入画框"
         android:textColor="@color/black" />
 
-    <LinearLayout
-        android:id="@+id/ll_slide"
+    <Button
+        android:id="@+id/btn_slide_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/btn_slide"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/selector_linearlayout_bg"
-        android:visibility="gone">
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/selector_btn_bg"
+        android:text="画框设置"
+        android:layout_toLeftOf="@id/btn_slide"
+        android:textColor="@color/black" />
 
-        <Button
-            android:id="@+id/btn_start_slide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_slide_bg"
-            android:text="播放画框"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"/>
+<!--    <LinearLayout-->
+<!--        android:id="@+id/ll_slide"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_marginRight="50dp"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_below="@id/btn_slide"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:background="@drawable/selector_linearlayout_bg"-->
+<!--        android:visibility="gone">-->
 
-        <Button
-            android:id="@+id/btn_setting_slide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_slide_bg"
-            android:text="设置画框"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"/>
+<!--        <Button-->
+<!--            android:id="@+id/btn_start_slide"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/selector_slide_bg"-->
+<!--            android:text="播放画框"-->
+<!--            android:paddingRight="5dp"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:textColor="@color/black"/>-->
 
-        <Button
-            android:id="@+id/btn_clear_slide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_slide_bg"
-            android:text="清空画框"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"/>
+<!--        <Button-->
+<!--            android:id="@+id/btn_setting_slide"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/selector_slide_bg"-->
+<!--            android:text="设置画框"-->
+<!--            android:paddingRight="5dp"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:textColor="@color/black"/>-->
 
-    </LinearLayout>
+<!--        <Button-->
+<!--            android:id="@+id/btn_clear_slide"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/selector_slide_bg"-->
+<!--            android:text="清空画框"-->
+<!--            android:paddingRight="5dp"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:textColor="@color/black"/>-->
+
+<!--    </LinearLayout>-->
 
 </RelativeLayout>

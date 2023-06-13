@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +46,7 @@ import com.js.photoalbum.manager.Contact;
 import com.js.photoalbum.manager.HorizontalDecoration;
 import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
+import com.js.photoalbum.view.AddPhotoDialog;
 import com.js.photoalbum.view.SlideDialog;
 import com.js.photoalbum.view.UpdateDialog;
 
@@ -101,8 +105,8 @@ public class MainActivity extends BaseActivity {
     private List<PhotoBean> paintPortraitList;
     private List<PhotoBean> slideList;
 
-    private LinearLayout llSlide;
-    private Button btnSlide, btnClearSlide, btnStartSlide, btnSettingSlide;
+//    private LinearLayout llSlide;
+    private Button btnSlide, btnSlideSetting;
     private ImageView ivGaussBlur, ivBack;
 
     private RecyclerView rvBottom;
@@ -124,8 +128,13 @@ public class MainActivity extends BaseActivity {
 
     private ObjectAnimator animator;
     private UpdateDialog updateDialog;
+    private AddPhotoDialog addPhotoDialog;
+    private SlideDialog slideDialog;
+    boolean isAdd = false;
 
     private int currentBottomPosition;
+
+    private boolean isRunStart = false;
 
 //    private int slideSpeed;
 
@@ -367,10 +376,11 @@ public class MainActivity extends BaseActivity {
         ivGaussBlur = findViewById(R.id.iv_gauss_blur);
         ivBack = findViewById(R.id.iv_back);
         btnSlide = findViewById(R.id.btn_slide);
-        btnClearSlide = findViewById(R.id.btn_clear_slide);
-        btnStartSlide = findViewById(R.id.btn_start_slide);
-        btnSettingSlide = findViewById(R.id.btn_setting_slide);
-        llSlide = findViewById(R.id.ll_slide);
+        btnSlideSetting = findViewById(R.id.btn_slide_setting);
+//        btnClearSlide = findViewById(R.id.btn_clear_slide);
+//        btnStartSlide = findViewById(R.id.btn_start_slide);
+//        btnSettingSlide = findViewById(R.id.btn_setting_slide);
+//        llSlide = findViewById(R.id.ll_slide);
         rvBottom = findViewById(R.id.rv_bottom);
 
 //        ivGaussBlur.setImageResource(R.mipmap.nature_default);
@@ -428,15 +438,25 @@ public class MainActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
+        isRunStart = true;
 //        rvPhoto.smoothScrollBy(-1, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isRunStart) {
+            adapter.notifyDataSetChanged();
+            rvPhoto.smoothScrollBy(1, 0);
+        }
     }
 
     private void initList() {
 
         slideList = MyApplication.getPhotoList();
-        float curTranslationX = llSlide.getTranslationX();
-        animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
-        animator.setDuration(500);
+//        float curTranslationX = llSlide.getTranslationX();
+//        animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
+//        animator.setDuration(500);
 
         bottomBeanList.add(new BottomBean(R.drawable.nature_circle, "自然风景"));
         bottomBeanList.add(new BottomBean(R.drawable.paint_circle, "世界名画"));
@@ -1056,73 +1076,69 @@ public class MainActivity extends BaseActivity {
         adapter.setOnItemLongClickListener(new PhotoRecyclerViewAdapter.OnItemLongClickListener() {
             @Override
             public void onClick(PhotoBean photoBean, ImageView imageView) {
-                boolean isAdd = false;
+                isAdd = false;
+                addPhotoDialog = new AddPhotoDialog(MainActivity.this);
                 Log.e(TAG, MyApplication.getPhotoList().toString());
                 Log.e(TAG, slideList.toString());
                 for (PhotoBean bean : MyApplication.getPhotoList()) {
                     if (photoBean.getImgUrl().equals(bean.getImgUrl())) {
                         isAdd = true;
-                        dialog = new AlertDialog.Builder(MainActivity.this)
-                                .setMessage("该图片已添加到画框，是否移除？")
-                                .setCancelable(false)
-                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        slideList.remove(photoBean);
-                                        Log.e(TAG, slideList.toString());
-                                        MyApplication.setPhotoList(slideList);
-                                        Log.e(TAG, MyApplication.getPhotoList().toString());
-                                        imageView.setVisibility(View.GONE);
-                                    }
-                                })
-                                .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
+                        break;
                     }
                 }
-                if (!isAdd) {
-                    dialog = new AlertDialog.Builder(MainActivity.this)
-                            .setMessage("是否将该图片添加到画框")
-                            .setCancelable(false)
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    slideList.add(photoBean);
-                                    MyApplication.setPhotoList(slideList);
-                                    imageView.setVisibility(View.VISIBLE);
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                if (isAdd) {
+                    addPhotoDialog.setAddPhotoText("将该图片移出画框");
+                } else {
+                    addPhotoDialog.setAddPhotoText("将该图片添加画框");
                 }
+//                Window window = addPhotoDialog.getWindow();
+//                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                addPhotoDialog.setAddPhotoOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addPhotoDialog.dismiss();
+                        if (isAdd) {
+                            slideList.remove(photoBean);
+                            Log.e(TAG, slideList.toString());
+                            MyApplication.setPhotoList(slideList);
+                            Log.e(TAG, MyApplication.getPhotoList().toString());
+                            imageView.setVisibility(View.GONE);
+                        } else {
+                            slideList.add(photoBean);
+                            MyApplication.setPhotoList(slideList);
+                            imageView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+                addPhotoDialog.setCLearOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addPhotoDialog.dismiss();
+                        if (slideList.size() != 0) {
+                            slideList.clear();
+                            adapter.notifyDataSetChanged();
+                            rvPhoto.smoothScrollBy(-10, 0);
+                            MyApplication.setPhotoList(slideList);
+                            ToastUtils.showToast(MainActivity.this, "已清空画框，请重新添加");
+                        } else {
+                            ToastUtils.showToast(MainActivity.this, "画框为空，无法进行操作");
+                        }
+                    }
+                });
+                addPhotoDialog.show();
+
             }
         });
 
         btnSlide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (llSlide.getVisibility() == View.VISIBLE) {
-                    llSlide.setVisibility(View.GONE);
-                } else {
-                    llSlide.setVisibility(View.VISIBLE);
-                    animator.start();
-                }
-            }
-        });
-
-        btnStartSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                llSlide.setVisibility(View.GONE);
+//                if (llSlide.getVisibility() == View.VISIBLE) {
+//                    llSlide.setVisibility(View.GONE);
+//                } else {
+//                    llSlide.setVisibility(View.VISIBLE);
+//                    animator.start();
+//                }
                 if (slideList.size() == 0) {
                     ToastUtils.showToast(MainActivity.this, "请长按图片添加到画框");
                 } else {
@@ -1135,11 +1151,29 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        btnSettingSlide.setOnClickListener(new View.OnClickListener() {
+//        btnStartSlide.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                llSlide.setVisibility(View.GONE);
+//                if (slideList.size() == 0) {
+//                    ToastUtils.showToast(MainActivity.this, "请长按图片添加到画框");
+//                } else {
+//                    Intent intent = new Intent(MainActivity.this, SlideActivity.class);
+////                    intent.putExtra("slideSpeed", slideSpeed);
+////                    intent.putParcelableArrayListExtra("slideList", (ArrayList<PhotoBean>) slideList);
+//                    startActivity(intent);
+//                    overridePendingTransition(R.anim.slide_in_from_bottom, 0);
+//                }
+//            }
+//        });
+
+        btnSlideSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                llSlide.setVisibility(View.GONE);
-                SlideDialog slideDialog = new SlideDialog(MainActivity.this);
+//                llSlide.setVisibility(View.GONE);
+                slideDialog = new SlideDialog(MainActivity.this);
+                Window window = slideDialog.getWindow();
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 slideDialog.setConfirmOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1163,26 +1197,26 @@ public class MainActivity extends BaseActivity {
                         slideDialog.dismiss();
                     }
                 });
-                slideDialog.setCancelable(false);
+//                slideDialog.setCancelable(false);
                 slideDialog.show();
             }
         });
 
-        btnClearSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                llSlide.setVisibility(View.GONE);
-                if (slideList.size() != 0) {
-                    slideList.clear();
-                    adapter.notifyDataSetChanged();
-                    rvPhoto.smoothScrollBy(-10, 0);
-                    MyApplication.setPhotoList(slideList);
-                    ToastUtils.showToast(MainActivity.this, "已清空画框，请重新添加");
-                } else {
-                    ToastUtils.showToast(MainActivity.this, "画框为空，无法进行操作");
-                }
-            }
-        });
+//        btnClearSlide.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                llSlide.setVisibility(View.GONE);
+//                if (slideList.size() != 0) {
+//                    slideList.clear();
+//                    adapter.notifyDataSetChanged();
+//                    rvPhoto.smoothScrollBy(-10, 0);
+//                    MyApplication.setPhotoList(slideList);
+//                    ToastUtils.showToast(MainActivity.this, "已清空画框，请重新添加");
+//                } else {
+//                    ToastUtils.showToast(MainActivity.this, "画框为空，无法进行操作");
+//                }
+//            }
+//        });
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1258,6 +1292,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        isRunStart = false;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         Log.e(TAG, "onStop");
@@ -1266,6 +1306,12 @@ public class MainActivity extends BaseActivity {
         }
         if (updateDialog != null) {
             updateDialog.dismiss();
+        }
+        if (slideDialog != null) {
+            slideDialog.dismiss();
+        }
+        if (addPhotoDialog != null) {
+            addPhotoDialog.dismiss();
         }
     }
 
@@ -1323,21 +1369,21 @@ public class MainActivity extends BaseActivity {
         }.start();
     }
 
-    /**
-     * 使editText点击外部时候失去焦点
-     *
-     * @param ev 触屏事件
-     * @return 事件是否被消费
-     */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            if (!CustomUtil.isTouchPointInView(llSlide, (int) ev.getX(), (int) ev.getY())) {
-                llSlide.setVisibility(View.GONE);
-            }
-            return super.dispatchTouchEvent(ev);
-        }
-        // 必不可少，否则所有的组件都不会有TouchEvent了
-        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
-    }
+//    /**
+//     * 使editText点击外部时候失去焦点
+//     *
+//     * @param ev 触屏事件
+//     * @return 事件是否被消费
+//     */
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+//            if (!CustomUtil.isTouchPointInView(llSlide, (int) ev.getX(), (int) ev.getY())) {
+//                llSlide.setVisibility(View.GONE);
+//            }
+//            return super.dispatchTouchEvent(ev);
+//        }
+//        // 必不可少，否则所有的组件都不会有TouchEvent了
+//        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+//    }
 }
