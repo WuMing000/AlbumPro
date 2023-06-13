@@ -586,6 +586,18 @@ public class MainActivity extends BaseActivity {
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_24).toString(), "", ""));
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_25).toString(), "", ""));
 
+        //paint-portrait
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_1).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_2).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_3).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_4).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_5).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_6).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_7).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_8).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_9).toString(), "", ""));
+        paintPortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_portrait_10).toString(), "", ""));
+
         //green
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_1).toString(), "", ""));
         plantList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.green_2).toString(), "", ""));
