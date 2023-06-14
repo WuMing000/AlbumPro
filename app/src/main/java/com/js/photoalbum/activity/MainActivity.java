@@ -568,31 +568,31 @@ public class MainActivity extends BaseActivity {
         naturePortraitList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.nature_portrait_10).toString(), "", ""));
 
         //girl
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_1).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_2).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_3).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_4).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_5).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_6).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_7).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_8).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_9).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_10).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_11).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_12).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_13).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_14).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_15).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_16).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_17).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_18).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_19).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_20).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_21).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_22).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_23).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_24).toString(), "", ""));
-        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_25).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_1).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_2).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_3).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_4).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_5).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_6).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_7).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_8).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_9).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_10).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_11).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_12).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_13).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_14).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_15).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_16).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_17).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_18).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_19).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_20).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_21).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_22).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_23).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_24).toString(), "", ""));
+//        girlList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.girl_25).toString(), "", ""));
 
         //paint
         paintList.add(new PhotoBean(idToUri(MainActivity.this, R.drawable.paint_1).toString(), "", ""));
