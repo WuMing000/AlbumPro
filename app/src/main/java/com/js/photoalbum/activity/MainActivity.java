@@ -2,6 +2,7 @@ package com.js.photoalbum.activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -80,6 +82,7 @@ public class MainActivity extends BaseActivity {
     private static final int UPDATE_VERSION_DIFFERENT = 0x004;
     private static final int UPDATE_VERSION_SAME = 0x005;
     private static final int NETWORK_NO_CONNECT = 0x006;
+    private static final int DOWNLOAD_ERROR = 0x007;
 
     private RecyclerView rvPhoto;
     private PhotoRecyclerViewAdapter adapter;
@@ -258,12 +261,21 @@ public class MainActivity extends BaseActivity {
                                 public void run() {
                                     DownProgressBean downProgressBean = CustomUtil.updateProgress(downBean.getDownloadId(), timer);
                                     Log.e(TAG, downProgressBean.getProgress());
-                                    float progress = Float.parseFloat(downProgressBean.getProgress());
-                                    if (progress == 100.00) {
+                                    try {
+                                        float progress = Float.parseFloat(downProgressBean.getProgress());
+                                        if (progress == 100.00) {
+                                            updateDialog.dismiss();
+                                        }
+                                        updateDialog.setPbProgress((int) progress);
+                                        updateDialog.setTvProgress(downProgressBean.getProgress());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                         updateDialog.dismiss();
+                                        timer.cancel();
+                                        DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                        manager.remove(downProgressBean.getDownloadId());
+                                        handler.sendEmptyMessageAtTime(DOWNLOAD_ERROR, 100);
                                     }
-                                    updateDialog.setPbProgress((int) progress);
-                                    updateDialog.setTvProgress(downProgressBean.getProgress());
                                 }
                             }, 0, 1000);
                         }
@@ -276,6 +288,9 @@ public class MainActivity extends BaseActivity {
                     break;
                 case NETWORK_NO_CONNECT:
                     ToastUtils.showToast(MainActivity.this, "网络未连接，请先连接网络");
+                    break;
+                case DOWNLOAD_ERROR:
+                    Toast.makeText(MainActivity.this, "下载异常，已取消下载", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -1305,9 +1320,6 @@ public class MainActivity extends BaseActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
-        if (updateDialog != null) {
-            updateDialog.dismiss();
-        }
         if (slideDialog != null) {
             slideDialog.dismiss();
         }
@@ -1326,6 +1338,9 @@ public class MainActivity extends BaseActivity {
 //        }
         if (mOnScrollListener != null) {
             rvPhoto.removeOnScrollListener(mOnScrollListener);
+        }
+        if (updateDialog != null) {
+            updateDialog.dismiss();
         }
     }
 
