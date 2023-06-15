@@ -83,6 +83,7 @@ public class MainActivity extends BaseActivity {
     private static final int UPDATE_VERSION_SAME = 0x005;
     private static final int NETWORK_NO_CONNECT = 0x006;
     private static final int DOWNLOAD_ERROR = 0x007;
+    private static final int DOWNLOADING_PROGRESS = 0x008;
 
     private RecyclerView rvPhoto;
     private PhotoRecyclerViewAdapter adapter;
@@ -254,30 +255,22 @@ public class MainActivity extends BaseActivity {
                         public void onClick(View v) {
                             updateDialog.setProgressVisible(View.VISIBLE);
                             updateDialog.setButtonVisible(View.GONE);
-                            DownBean downBean = CustomUtil.updateAPK(Contact.SERVER_URL + ":8080/test/js_project/album/js_photoalbum.apk");
-                            Timer timer = new Timer();
-                            timer.schedule(new TimerTask() {
+                            new Thread() {
                                 @Override
                                 public void run() {
-                                    DownProgressBean downProgressBean = CustomUtil.updateProgress(downBean.getDownloadId(), timer);
-                                    Log.e(TAG, downProgressBean.getProgress());
-                                    try {
-                                        float progress = Float.parseFloat(downProgressBean.getProgress());
-                                        if (progress == 100.00) {
-                                            updateDialog.dismiss();
-                                        }
-                                        updateDialog.setPbProgress((int) progress);
-                                        updateDialog.setTvProgress(downProgressBean.getProgress());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        updateDialog.dismiss();
-                                        timer.cancel();
-                                        DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                                        manager.remove(downProgressBean.getDownloadId());
-                                        handler.sendEmptyMessageAtTime(DOWNLOAD_ERROR, 100);
+                                    super.run();
+                                    String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Update.txt");
+                                    Log.e(TAG, "serverFile:" + serverFile);
+                                    if (serverFile.length() == 0) {
+                                        handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
+                                    } else {
+                                        Message message = new Message();
+                                        message.obj = serverFile;
+                                        message.what = DOWNLOADING_PROGRESS;
+                                        handler.sendMessageAtTime(message, 100);
                                     }
                                 }
-                            }, 0, 1000);
+                            }.start();
                         }
                     });
                     updateDialog.setCancelable(false);
@@ -291,6 +284,33 @@ public class MainActivity extends BaseActivity {
                     break;
                 case DOWNLOAD_ERROR:
                     Toast.makeText(MainActivity.this, "下载异常，已取消下载", Toast.LENGTH_SHORT).show();
+                    break;
+                case DOWNLOADING_PROGRESS:
+                    String downUrl = (String) msg.obj;
+                    DownBean downBean = CustomUtil.updateAPK(downUrl);
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            DownProgressBean downProgressBean = CustomUtil.updateProgress(downBean.getDownloadId(), timer);
+                            Log.e(TAG, downProgressBean.getProgress());
+                            try {
+                                float progress = Float.parseFloat(downProgressBean.getProgress());
+                                if (progress == 100.00) {
+                                    updateDialog.dismiss();
+                                }
+                                updateDialog.setPbProgress((int) progress);
+                                updateDialog.setTvProgress(downProgressBean.getProgress());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                updateDialog.dismiss();
+                                timer.cancel();
+                                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                manager.remove(downProgressBean.getDownloadId());
+                                handler.sendEmptyMessageAtTime(DOWNLOAD_ERROR, 100);
+                            }
+                        }
+                    }, 0, 1000);
                     break;
             }
         }
@@ -464,11 +484,11 @@ public class MainActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
             rvPhoto.smoothScrollBy(1, 0);
         }
+        slideList = MyApplication.getPhotoList();
     }
 
     private void initList() {
 
-        slideList = MyApplication.getPhotoList();
 //        float curTranslationX = llSlide.getTranslationX();
 //        animator = ObjectAnimator.ofFloat(llSlide, "translationX", 200f, curTranslationX);
 //        animator.setDuration(500);
