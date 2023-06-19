@@ -52,6 +52,10 @@ import com.js.photoalbum.view.AddPhotoDialog;
 import com.js.photoalbum.view.SlideDialog;
 import com.js.photoalbum.view.UpdateDialog;
 
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -239,10 +243,15 @@ public class MainActivity extends BaseActivity {
                 case ADAPTER_CHANGED:
                     adapter.notifyDataSetChanged();
                     break;
+                case NETWORK_NO_CONNECT:
+//                    Toast.makeText(MainActivity.this, "网络未连接，请先连接网络", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "network is not connect!");
+                    break;
                 case UPDATE_VERSION_DIFFERENT:
-                    Log.e(TAG, "版本号不一致");
+                    Log.e(TAG, "version is different!");
+                    File saveFile = (File) msg.obj;
                     updateDialog = new UpdateDialog(MainActivity.this);
-                    updateDialog.setMessage("相册有新版本！！！");
+                    updateDialog.setMessage("相册发现新版本！！！");
                     updateDialog.setTitleVisible(View.GONE);
                     updateDialog.setExitOnClickListener(new View.OnClickListener() {
                         @Override
@@ -253,34 +262,31 @@ public class MainActivity extends BaseActivity {
                     updateDialog.setUpdateOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            updateDialog.setProgressVisible(View.VISIBLE);
-                            updateDialog.setButtonVisible(View.GONE);
-                            new Thread() {
-                                @Override
-                                public void run() {
-                                    super.run();
-                                    String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Update.txt");
-                                    Log.e(TAG, "serverFile:" + serverFile);
-                                    if (serverFile.length() == 0) {
-                                        handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
-                                    } else {
-                                        Message message = new Message();
-                                        message.obj = serverFile;
-                                        message.what = DOWNLOADING_PROGRESS;
-                                        handler.sendMessageAtTime(message, 100);
-                                    }
-                                }
-                            }.start();
+                            updateDialog.dismiss();
+                            CustomUtil.installAPK(MainActivity.this, saveFile);
                         }
                     });
-                    updateDialog.setCancelable(false);
                     updateDialog.show();
                     break;
                 case UPDATE_VERSION_SAME:
-                    Log.e(TAG, "版本号一致");
-                    break;
-                case NETWORK_NO_CONNECT:
-                    ToastUtils.showToast(MainActivity.this, "网络未连接，请先连接网络");
+                    Log.e(TAG, "version is same!");
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            File file = new File(MyApplication.getContext().getExternalFilesDir(null).getAbsolutePath());
+                            Log.e(TAG, file.listFiles().length + "");
+                            if (file.listFiles() != null) {
+                                for (File listFile : file.listFiles()) {
+                                    Log.e(TAG, listFile.getName() + "===========");
+                                    if (listFile.getName().contains("com.js.photoalbum")) {
+                                        listFile.delete();
+                                        Log.e(TAG, "delete update APK...");
+                                    }
+                                }
+                            }
+                        }
+                    }.start();
                     break;
                 case DOWNLOAD_ERROR:
                     Toast.makeText(MainActivity.this, "下载异常，已取消下载", Toast.LENGTH_SHORT).show();
@@ -454,19 +460,69 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 super.run();
                 String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
+                Log.e(TAG, serverFile.length() + "=======wu");
+                String localVersionName = CustomUtil.getLocalVersionName();
                 if (serverFile.length() == 0) {
                     handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
                     return;
                 }
-                String localVersionName = CustomUtil.getLocalVersionName();
                 if (localVersionName.equals(serverFile)) {
                     handler.sendEmptyMessageAtTime(UPDATE_VERSION_SAME, 100);
                 } else {
-                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_DIFFERENT, 100);
+                    File saveFile = new File(MyApplication.getContext().getExternalFilesDir(null), "com.js.photoalbum_" + serverFile + ".apk");
+                    if (saveFile.exists()) {
+                        Message message = new Message();
+                        message.what = UPDATE_VERSION_DIFFERENT;
+                        message.obj = saveFile;
+                        handler.sendMessageAtTime(message, 100);
+                    } else {
+                        getUpdateAPK(serverFile);
+                    }
                 }
             }
         }.start();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//                String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
+//                if (serverFile.length() == 0) {
+//                    handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
+//                    return;
+//                }
+//                String localVersionName = CustomUtil.getLocalVersionName();
+//                if (localVersionName.equals(serverFile)) {
+//                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_SAME, 100);
+//                } else {
+//                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_DIFFERENT, 100);
+//                }
+//            }
+//        }.start();
 
+    }
+
+    private void getUpdateAPK(String version) {
+        try {
+            Log.e(TAG, "================开始");
+            FTPClient client = new FTPClient();
+            client.connect(Contact.FTP_SERVER_IP, Contact.FTP_SERVER_PORT);
+            client.login(Contact.FTP_SERVER_USERNAME, Contact.FTP_SERVER_PASSWORD);
+            client.configure(new FTPClientConfig(FTPClientConfig.SYST_UNIX));
+//                    int replyCode = client.getReplyCode();
+//                    Log.e(TAG, replyCode + "==============1111");
+            if (client.getReplyCode() == 230) {
+//                Log.e(TAG, "1111" + MyApplication.getInstance().getContext().getExternalFilesDir(null).getAbsolutePath());
+                CustomUtil.downLoadFile(client, MyApplication.getContext().getExternalFilesDir(null).getAbsolutePath() + "/com.js.photoalbum_" + version, "com.js.photoalbum.apk");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                Thread.sleep(60000);
+                getUpdateAPK(version);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     @Override
