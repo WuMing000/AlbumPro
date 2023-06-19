@@ -115,9 +115,11 @@ public class ImageLargeActivity extends BaseActivity {
                             Log.e(TAG, slideList.toString());
                             MyApplication.setPhotoList(slideList);
                             Log.e(TAG, MyApplication.getPhotoList().toString());
+                            ToastUtils.showToast(ImageLargeActivity.this, "图片已移出画框");
                         } else {
                             slideList.add(photoBean);
                             MyApplication.setPhotoList(slideList);
+                            ToastUtils.showToast(ImageLargeActivity.this, "图片已添加画框");
                         }
                     }
                 });

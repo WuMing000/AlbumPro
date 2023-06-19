@@ -18,6 +18,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -1195,10 +1196,12 @@ public class MainActivity extends BaseActivity {
                             MyApplication.setPhotoList(slideList);
                             Log.e(TAG, MyApplication.getPhotoList().toString());
                             imageView.setVisibility(View.GONE);
+                            ToastUtils.showToast(MainActivity.this, "图片已移出画框");
                         } else {
                             slideList.add(photoBean);
                             MyApplication.setPhotoList(slideList);
                             imageView.setVisibility(View.VISIBLE);
+                            ToastUtils.showToast(MainActivity.this, "图片已添加画框");
                         }
                     }
                 });
@@ -1386,6 +1389,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        ToastUtils.cancelToast();
         isRunStart = false;
     }
 
