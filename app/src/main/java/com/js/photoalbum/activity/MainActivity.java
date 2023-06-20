@@ -874,7 +874,7 @@ public class MainActivity extends BaseActivity {
                 if ("自然风景".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -904,7 +904,7 @@ public class MainActivity extends BaseActivity {
                 } else if ("养眼美女".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -930,7 +930,7 @@ public class MainActivity extends BaseActivity {
                 } else if ("护眼绿色".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -1015,7 +1015,7 @@ public class MainActivity extends BaseActivity {
                 else if ("璀璨星空".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -1045,7 +1045,7 @@ public class MainActivity extends BaseActivity {
                 } else if ("热血动漫".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -1075,7 +1075,7 @@ public class MainActivity extends BaseActivity {
                 } else if ("时尚汽车".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -1105,7 +1105,7 @@ public class MainActivity extends BaseActivity {
                 } else if ("世界名画".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
@@ -1135,7 +1135,7 @@ public class MainActivity extends BaseActivity {
                 } else if ("本地相册".equals(bottomBeanList.get(position).getBottomName())) {
                     ToastUtils.cancelToast();
                     if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
+//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
 //                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();

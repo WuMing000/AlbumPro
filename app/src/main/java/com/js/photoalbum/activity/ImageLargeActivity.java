@@ -163,11 +163,11 @@ public class ImageLargeActivity extends BaseActivity {
                     if (lastVisibleItem == (totalItemCount - 1) && isSlidingToLast) {
                         //加载更多功能的代码
 //                        Toast.makeText(ImageLargeActivity.this, "当前是本分类最后一张图片", Toast.LENGTH_SHORT).show();
-                        ToastUtils.showToast(ImageLargeActivity.this, "当前是本分类最后一张图片");
+                        ToastUtils.showToast(ImageLargeActivity.this, "到底了~~~");
 //                        Snackbar.make(ImageLargeActivity.this, recyclerView, "当前是本分类最后一张图片", Snackbar.LENGTH_SHORT).show();
                     } else if (firstVisibleItem == 0 && isSlidingToStart) {
 //                        Toast.makeText(ImageLargeActivity.this, "当前是本分类第一张图片", Toast.LENGTH_SHORT).show();
-                        ToastUtils.showToast(ImageLargeActivity.this, "当前是本分类第一张图片");
+//                        ToastUtils.showToast(ImageLargeActivity.this, "当前是本分类第一张图片");
                     } else {
                         ToastUtils.cancelToast();
                     }
