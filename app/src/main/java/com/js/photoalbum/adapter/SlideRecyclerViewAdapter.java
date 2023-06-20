@@ -55,9 +55,9 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
             holder.ivSlide.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         if (mList.size() == 0) {
-//            ToastUtils.showToast(mContext, "幻灯片为空，请先添加幻灯片（长按图片可添加）");
-//            Intent intent = new Intent(mContext, MainActivity.class);
-//            mContext.startActivity(intent);
+            ToastUtils.showToast(mContext, "画框为空，请长按图片添加到画框");
+            Intent intent = new Intent(mContext, MainActivity.class);
+            mContext.startActivity(intent);
         } else {
             String s = mList.get(position % mList.size()).getImgUrl();
 //            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
