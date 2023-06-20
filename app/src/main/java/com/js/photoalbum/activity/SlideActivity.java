@@ -117,6 +117,8 @@ public class SlideActivity extends BaseActivity {
         adapter.notifyDataSetChanged();
         Log.e(TAG, mList.toString());
 
+        registerUpdateTimeReceiver();
+
     }
 
     private final float mShrinkAmount = 0.55f;
@@ -192,8 +194,11 @@ public class SlideActivity extends BaseActivity {
                 rvSlide.smoothScrollToPosition(linearLayoutManager.findFirstVisibleItemPosition() + 1);
             }
         }, slideSpeed, slideSpeed, TimeUnit.MILLISECONDS);
+    }
 
-        registerUpdateTimeReceiver();
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     /**
@@ -268,6 +273,11 @@ public class SlideActivity extends BaseActivity {
         if (scheduledExecutorService != null) {
             scheduledExecutorService.shutdown();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (mTimeUpdateReceiver != null) {
             unregisterReceiver(mTimeUpdateReceiver);
         }
