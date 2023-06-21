@@ -30,7 +30,7 @@
             android:name=".activity.MainActivity"
             android:exported="true"
             android:screenOrientation="unspecified"
-            android:theme="@style/MyThemeFullScreen"
+            android:theme="@style/MyMainTheme"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:launchMode="singleTop">
