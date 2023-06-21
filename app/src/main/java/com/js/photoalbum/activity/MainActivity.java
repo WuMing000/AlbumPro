@@ -423,7 +423,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
+                String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":"+ Contact.TOMCAT_SERVER_PORT + Contact.VERSION_URL);
                 Log.e(TAG, serverFile.length() + "=======");
                 String localVersionName = CustomUtil.getLocalVersionName();
                 if (serverFile.length() == 0) {
@@ -433,7 +433,7 @@ public class MainActivity extends BaseActivity {
                 if (localVersionName.equals(serverFile)) {
                     handler.sendEmptyMessageAtTime(UPDATE_VERSION_SAME, 100);
                 } else {
-                    File saveFile = new File(MyApplication.getContext().getExternalFilesDir(null), "com.js.photoalbum_" + serverFile + ".apk");
+                    File saveFile = new File(MyApplication.getContext().getExternalFilesDir(null), Contact.PACKAGE_NAME + "-" + serverFile + ".apk");
                     if (saveFile.exists()) {
                         Message message = new Message();
                         message.what = UPDATE_VERSION_DIFFERENT;
@@ -445,23 +445,6 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }.start();
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
-//                if (serverFile.length() == 0) {
-//                    handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
-//                    return;
-//                }
-//                String localVersionName = CustomUtil.getLocalVersionName();
-//                if (localVersionName.equals(serverFile)) {
-//                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_SAME, 100);
-//                } else {
-//                    handler.sendEmptyMessageAtTime(UPDATE_VERSION_DIFFERENT, 100);
-//                }
-//            }
-//        }.start();
 
     }
 
@@ -476,7 +459,7 @@ public class MainActivity extends BaseActivity {
 //                    Log.e(TAG, replyCode + "==============1111");
             if (client.getReplyCode() == 230) {
 //                Log.e(TAG, "1111" + MyApplication.getInstance().getContext().getExternalFilesDir(null).getAbsolutePath());
-                CustomUtil.downLoadFile(client, MyApplication.getContext().getExternalFilesDir(null).getAbsolutePath() + "/com.js.photoalbum_" + version, "com.js.photoalbum.apk");
+                CustomUtil.downLoadFile(client, MyApplication.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + Contact.PACKAGE_NAME + "-" + version, Contact.PACKAGE_NAME + ".apk");
             }
         } catch (IOException e) {
             e.printStackTrace();
