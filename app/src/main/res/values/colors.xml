@@ -11,4 +11,6 @@
     <color name="kelaiyin_blue">#FF002FA7</color>
     <color name="red">#FFFF0000</color>
     <color name="gray">#686868</color>
+    <color name="dark_gray">#757575</color>
+    <color name="deep_blue">#00838F</color>
 </resources>

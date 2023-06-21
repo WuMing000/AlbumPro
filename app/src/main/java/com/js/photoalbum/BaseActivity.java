@@ -17,7 +17,7 @@ public class BaseActivity extends Activity {
 
     private static final String TAG = "BaseActivity==============>";
 
-    private static List<Activity> activityList = new ArrayList<>();
+    private static final List<Activity> activityList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,14 +74,6 @@ public class BaseActivity extends Activity {
 
     public static void exit() {
         finishAll();
-        // 这个主要是用来关闭进程的, 关把所有activity finish
-        // 的话，进程是不会关闭的
-//        try {
-//            Thread.sleep(800);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//        System.exit(0);
     }
 
 }

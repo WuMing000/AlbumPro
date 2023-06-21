@@ -1,5 +1,6 @@
 package com.js.photoalbum.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -13,17 +14,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * 圆形的ImageView
  */
 
 public class CircleImageView extends androidx.appcompat.widget.AppCompatImageView {
-    private Paint mPaintBitmap = new Paint(Paint.ANTI_ALIAS_FLAG);//抗锯齿
+    private final Paint mPaintBitmap = new Paint(Paint.ANTI_ALIAS_FLAG);//抗锯齿
     private Bitmap mRawBitmap;
     private BitmapShader mShader;
-    private Matrix mMatrix = new Matrix();
+    private final Matrix mMatrix = new Matrix();
     private int strokeColor = 0xFFFFFFFF;//默认边框是白色
     private float strokeWidth = 0;//单位是像素的边框宽度
 
@@ -40,22 +40,18 @@ public class CircleImageView extends androidx.appcompat.widget.AppCompatImageVie
             int viewWidth = getWidth();
             int viewHeight = getHeight();
             int viewMinSize = Math.min(viewWidth, viewHeight);
-            float dstWidth = viewMinSize;
-            float dstHeight = viewMinSize;
             if (mShader == null || !rawBitmap.equals(mRawBitmap)) {
                 mRawBitmap = rawBitmap;
                 mShader = new BitmapShader(mRawBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
             }
-            if (mShader != null) {
-                mMatrix.setScale(dstWidth / rawBitmap.getWidth(), dstHeight / rawBitmap.getHeight());
-                mShader.setLocalMatrix(mMatrix);
-            }
+            mMatrix.setScale((float) viewMinSize / rawBitmap.getWidth(), (float) viewMinSize / rawBitmap.getHeight());
+            mShader.setLocalMatrix(mMatrix);
             mPaintBitmap.setShader(mShader);
             float radius = viewMinSize / 2.0f;
 
             // 如果边框宽度不为0,则画出边框
             if(strokeWidth != 0){
-                Paint whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                @SuppressLint("DrawAllocation") Paint whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 whitePaint.setColor(strokeColor);
                 // 首先画一个圆，填充的是边框的颜色,大小就是此控件设置的大小
                 canvas.drawCircle(radius, radius, radius, whitePaint);

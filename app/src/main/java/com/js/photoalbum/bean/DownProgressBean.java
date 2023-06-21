@@ -1,5 +1,7 @@
 package com.js.photoalbum.bean;
 
+import androidx.annotation.NonNull;
+
 public class DownProgressBean {
 
     private long downloadId;
@@ -29,6 +31,7 @@ public class DownProgressBean {
         this.progress = progress;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DownProgressBean{" +

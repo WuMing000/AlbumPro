@@ -22,9 +22,6 @@ public class PhotoListDataSaveUtils {
 
     /**
      * 保存普通String
-     *
-     * @param key
-     * @param value
      */
     public void setDataString(String key, String value) {
         if (value == null) {
@@ -40,8 +37,6 @@ public class PhotoListDataSaveUtils {
 
     /**
      * 获取普通的String
-     * @param key
-     * @return
      */
     public String getDataString(String key) {
         String value = "";
@@ -57,9 +52,6 @@ public class PhotoListDataSaveUtils {
 
     /**
      * 保存对象
-     *
-     * @param typeName
-     * @param value
      */
     public void setDataBean(String typeName, String idName, SlideTypeBean value) {
         if (value == null) {
@@ -73,8 +65,6 @@ public class PhotoListDataSaveUtils {
 
     /**
      * 获取对象
-     * @param typeName
-     * @return
      */
     public SlideTypeBean getDataBean(String typeName, String idName) {
         String slideType = preferences.getString(typeName, null);
@@ -84,9 +74,6 @@ public class PhotoListDataSaveUtils {
 
     /**
      * 保存List
-     *
-     * @param tag
-     * @param dataList
      */
     public void setDataList(String tag, List<PhotoBean> dataList) {
         if (null == dataList)
@@ -102,9 +89,6 @@ public class PhotoListDataSaveUtils {
 
     /**
      * 获取List
-     *
-     * @param tag
-     * @return
      */
     public List<PhotoBean> getDataList(String tag) {
         List<PhotoBean> dataList = new ArrayList();

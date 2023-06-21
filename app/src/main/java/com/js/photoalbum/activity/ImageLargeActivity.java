@@ -1,13 +1,11 @@
 package com.js.photoalbum.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,12 +19,10 @@ import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
 import com.js.photoalbum.view.AddPhotoDialog;
-import com.js.photoalbum.view.SlideDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +32,6 @@ public class ImageLargeActivity extends BaseActivity {
 
     private static final String TAG = "ImageLargeActivity==============>";
 
-//    private ZoomImageView ivLarge;
     private RecyclerView recyclerView;
     private LargeRecyclerViewAdapter adapter;
     private List<PhotoBean> mList;
@@ -44,7 +39,6 @@ public class ImageLargeActivity extends BaseActivity {
     private AddPhotoDialog addPhotoDialog;
     boolean isAdd = false;
     private ImageView ivBack;
-    private float downY, moveY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,21 +194,4 @@ public class ImageLargeActivity extends BaseActivity {
         super.onDestroy();
         ToastUtils.cancelToast();
     }
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//
-//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//            downY = ev.getRawY();
-//        } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
-//            moveY = ev.getRawY();
-//            float v = Math.abs(downY - moveY);
-//            Log.e(TAG, v + "");
-//            if (v > 100) {
-//                finish();
-//            }
-//        }
-//
-//        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
-//    }
 }

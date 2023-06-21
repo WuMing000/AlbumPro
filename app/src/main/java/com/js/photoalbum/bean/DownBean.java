@@ -2,6 +2,8 @@ package com.js.photoalbum.bean;
 
 import java.util.Timer;
 
+import androidx.annotation.NonNull;
+
 public class DownBean {
 
     private long downloadId;
@@ -36,6 +38,7 @@ public class DownBean {
         this.timer = timer;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DownBean{" +

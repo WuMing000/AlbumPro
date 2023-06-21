@@ -1,5 +1,7 @@
 package com.js.photoalbum.bean;
 
+import androidx.annotation.NonNull;
+
 public class BottomBean {
 
     private int bottomId;
@@ -29,6 +31,7 @@ public class BottomBean {
         this.bottomName = bottomName;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "BottomBean{" +

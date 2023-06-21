@@ -1,5 +1,6 @@
 package com.js.photoalbum.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,14 +16,14 @@ import androidx.annotation.NonNull;
 
 public class UpdateDialog extends Dialog {
 
-    private LinearLayout llUpdate;
-    private TextView tvUpdateTitle, tvUpdateMessage, tvUpdateProgress;
-    private Button btnUpdate, btnExit;
-    private ProgressBar pbUpdateProgress;
+    private final LinearLayout llUpdate;
+    private final TextView tvUpdateTitle, tvUpdateMessage, tvUpdateProgress;
+    private final Button btnUpdate, btnExit;
+    private final ProgressBar pbUpdateProgress;
 
     public UpdateDialog(@NonNull Context context) {
         super(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_update, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dialog_update, null);
 
         llUpdate = view.findViewById(R.id.ll_update);
         tvUpdateTitle = view.findViewById(R.id.tv_update_title);

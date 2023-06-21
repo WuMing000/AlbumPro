@@ -4,34 +4,27 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.js.photoalbum.R;
 import com.js.photoalbum.activity.MainActivity;
 import com.js.photoalbum.bean.PhotoBean;
-import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecyclerViewAdapter.MyViewHolder> {
 
-    private Context mContext;
-    private List<PhotoBean> mList;
+    private final Context mContext;
+    private final List<PhotoBean> mList;
 
     public SlideRecyclerViewAdapter(Context mContext, List<PhotoBean> mList) {
         this.mContext = mContext;
@@ -60,19 +53,6 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
             mContext.startActivity(intent);
         } else {
             String s = mList.get(position % mList.size()).getImgUrl();
-//            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.loading_image).into(new CustomTarget<Drawable>() {
-//                @Override
-//                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-//                    holder.ivSlide.setImageDrawable(resource);
-//                }
-//
-//                @Override
-//                public void onLoadCleared(@Nullable Drawable placeholder) {
-//
-//                }
-//            });
-
-//            Glide.with(mContext).load(s).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(holder.ivSlide.getDrawable()).into(holder.ivSlide);
             Uri uri;
             if (s.contains("storage")) {
                 uri = Uri.parse("file://" + s);
@@ -88,9 +68,9 @@ public class SlideRecyclerViewAdapter extends RecyclerView.Adapter<SlideRecycler
         return Integer.MAX_VALUE;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private SimpleDraweeView ivSlide;
+        private final SimpleDraweeView ivSlide;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

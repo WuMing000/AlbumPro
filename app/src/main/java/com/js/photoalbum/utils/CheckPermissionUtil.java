@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.js.photoalbum.activity.MainActivity;
 import com.js.photoalbum.MyApplication;
+import com.js.photoalbum.activity.MainActivity;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;

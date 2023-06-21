@@ -1,5 +1,7 @@
 package com.js.photoalbum.bean;
 
+import androidx.annotation.NonNull;
+
 public class SlideTypeBean {
 
     private int slideId;
@@ -29,6 +31,7 @@ public class SlideTypeBean {
         this.slideType = slideType;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "SlideTypeBean{" +

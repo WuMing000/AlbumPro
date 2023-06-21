@@ -89,6 +89,7 @@ public class PhotoBean implements Parcelable {
         return Objects.hash(imgUrl, imgName, imgAuthor);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "PhotoBean{" +

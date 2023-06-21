@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,41 +31,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-@SuppressLint("LongLogTag")
+@SuppressLint({"LongLogTag", "NotifyDataSetChanged", "SimpleDateFormat"})
 public class SlideActivity extends BaseActivity {
 
     private static final String TAG = "SlideActivity===========>";
 
     private RecyclerView rvSlide;
     private TextView tvTime;
-    private SlideRecyclerViewAdapter adapter;
-    private List<PhotoBean> mList;
 
     private ScheduledExecutorService scheduledExecutorService;
     private LinearLayoutManager linearLayoutManager;
 
     private int slideSpeed;
     private String slideType;
-
-    private Handler handler = new Handler(Looper.myLooper()) {
-        @Override
-        public void dispatchMessage(@NonNull Message msg) {
-            super.dispatchMessage(msg);
-//            if (msg.what == 0x001) {
-//                handler.postDelayed(timeRunnable, 1000);
-//            }
-        }
-    };
-
-//    Runnable timeRunnable = new Runnable() {
-//        @Override
-//        public void run() {
-//            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-//            String date = df.format(new Date());
-//            tvTime.setText(date);
-////            handler.sendEmptyMessageAtTime(0x001, 100);
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +52,7 @@ public class SlideActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_slide);
 
-        mList = new ArrayList<>();
+        List<PhotoBean> mList = new ArrayList<>();
         rvSlide = findViewById(R.id.rv_slide);
         tvTime = findViewById(R.id.tv_time);
 
@@ -96,7 +71,7 @@ public class SlideActivity extends BaseActivity {
         Log.e(TAG, "slideSpeed:" + slideSpeed);
 //        slideSpeed = getIntent().getIntExtra("slideSpeed", 10000);
 
-        adapter = new SlideRecyclerViewAdapter(this, mList);
+        SlideRecyclerViewAdapter adapter = new SlideRecyclerViewAdapter(this, mList);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvSlide.setLayoutManager(linearLayoutManager);
         rvSlide.setAdapter(adapter);
@@ -111,8 +86,6 @@ public class SlideActivity extends BaseActivity {
 
         rvSlide.addOnScrollListener(onScrollListener);
 
-//        Intent intent = getIntent();
-//        ArrayList<PhotoBean> slideList = intent.getParcelableArrayListExtra("slideList");
         mList.addAll(MyApplication.getPhotoList());
         adapter.notifyDataSetChanged();
         Log.e(TAG, mList.toString());
@@ -121,56 +94,20 @@ public class SlideActivity extends BaseActivity {
 
     }
 
-    private final float mShrinkAmount = 0.55f;
-    private final float mShrinkDistance = 0.9f;
+//    private final float mShrinkAmount = 0.55f;
+//    private final float mShrinkDistance = 0.9f;
     RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
 
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-
-//            int childCount = recyclerView.getChildCount();
-////            Log.e("ccc", childCount + "");
-////
-//            int[] location = new int[2];
-//            for (int i = 0; i < childCount; i++) {
-//                View v = recyclerView.getChildAt(i);
-//                v.getLocationOnScreen(location);
-//                int recyclerViewCenterX = recyclerView.getLeft() + recyclerView.getWidth() / 2;
-//                int itemCenterX = location[0] + v.getWidth() / 2;
-//
-////                   ★ 两边的图片缩放比例
-//                float scale = 0.5f;
-////                     ★某个item中心X坐标距recyclerview中心X坐标的偏移量
-//                int offX = Math.abs(itemCenterX - recyclerViewCenterX);
-////                    ★ 在一个item的宽度范围内，item从1缩放至scale，那么改变了（1-scale），从下列公式算出随着offX变化，item的变化缩放百分比
-//
-//                float percent = offX * (1 - scale) / v.getWidth();
-////                   ★  取反哟
-//                float interpretateScale = 1 - percent;
-////
-////
-//                v.setScaleX((interpretateScale));
-//                v.setScaleY((interpretateScale));
-////
-//            }
-
-//            int childCount = recyclerView.getChildCount();
-//            for (int i = 0; i < childCount; i++) {
-//                View child = recyclerView.getChildAt(i);
-//                int left = child.getLeft();//距屏幕左边距
-//                float i1 = left * 1f / child.getWidth();//随着滑动左边距和控件宽度的比例变化
-//                float degree = (30 * i1) * 1f;//旋转角度ÿ
-//                child.setScaleX(degree);
-//            }
-
             if ("缩小".equals(slideType)) {
                 float midpoint = recyclerView.getWidth() / 2.f;
                 float d0 = 0.f;
-                float d1 = mShrinkDistance * midpoint;
+                float d1 = 0.9f * midpoint;
                 float s0 = 1.f;
-                float s1 = 1.f - mShrinkAmount;
+                float s1 = 1.f - 0.55f;
                 for (int i = 0; i < recyclerView.getChildCount(); i++) {
                     View child = recyclerView.getChildAt(i);
                     float childMidpoint = (linearLayoutManager.getDecoratedRight(child) + linearLayoutManager.getDecoratedLeft(child)) / 2.f;
@@ -236,7 +173,10 @@ public class SlideActivity extends BaseActivity {
     };
 
     private boolean isMoveDown = false;
-    private float downY, moveY, downX, moveX;
+    private float downY;
+    private float moveY;
+    private float downX;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
@@ -246,7 +186,7 @@ public class SlideActivity extends BaseActivity {
             downX = ev.getRawX();
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
             moveY = ev.getRawY();
-            moveX = ev.getRawX();
+            float moveX = ev.getRawX();
             float abs = Math.abs(downX - moveX);
             float v = downY - moveY;
             Log.e(TAG, v + "");

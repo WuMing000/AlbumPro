@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/nature_17"/>
+        android:src="@drawable/nature_1"
+        android:contentDescription="@string/string_main_bg" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/icon_back_white"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/string_back" />
 
         </RelativeLayout>
 
@@ -46,56 +47,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginBottom="30dp">
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:gravity="center">-->
-
-<!--                <com.js.photoalbum.view.CircleImageView-->
-<!--                    android:id="@+id/btn_nature"-->
-<!--                    android:layout_width="80dp"-->
-<!--                    android:layout_height="80dp"-->
-<!--                    android:src="@drawable/nature_circle"-->
-<!--                    android:scaleType="centerCrop" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_nature"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="自然风景"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:layout_marginTop="5dp"/>-->
-
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:gravity="center">-->
-
-<!--                <com.js.photoalbum.view.CircleImageView-->
-<!--                    android:id="@+id/btn_local"-->
-<!--                    android:layout_width="80dp"-->
-<!--                    android:layout_height="80dp"-->
-<!--                    android:src="@drawable/local_circle"-->
-<!--                    android:scaleType="centerCrop" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_local"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="本机照片"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:layout_marginTop="5dp"/>-->
-
-<!--            </LinearLayout>-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_bottom"
@@ -112,11 +63,11 @@
         android:id="@+id/btn_slide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/selector_btn_bg"
-        android:text="进入画框"
+        android:text="@string/string_in_frame"
         android:textColor="@color/black" />
 
     <Button
@@ -124,12 +75,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/selector_btn_bg"
-        android:text="画框设置"
-        android:layout_toLeftOf="@id/btn_slide"
-        android:textColor="@color/black" />
+        android:text="@string/string_settings_frame"
+        android:layout_toStartOf="@id/btn_slide"
+        android:textColor="@color/black"
+        tools:ignore="RelativeOverlap" />
 
 <!--    <LinearLayout-->
 <!--        android:id="@+id/ll_slide"-->

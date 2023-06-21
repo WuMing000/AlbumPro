@@ -6,29 +6,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.js.photoalbum.MyApplication;
 import com.js.photoalbum.R;
 import com.js.photoalbum.bean.BottomBean;
-import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.view.CircleImageView;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecyclerViewAdapter.MyViewHolder> {
 
-    private Context mContext;
-    private List<BottomBean> mList;
+    private final Context mContext;
+    private final List<BottomBean> mList;
 
     private OnItemClickListener onItemClickListener;
     private OnLongItemClickListener onLongItemClickListener;
@@ -97,10 +89,10 @@ public class BottomRecyclerViewAdapter extends RecyclerView.Adapter<BottomRecycl
         return mList == null ? 0 : mList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView ivName;
-        private TextView tvName;
+        private final CircleImageView ivName;
+        private final TextView tvName;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

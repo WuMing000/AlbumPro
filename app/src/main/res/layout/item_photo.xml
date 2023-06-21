@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center">
 
@@ -30,9 +29,10 @@
             android:layout_height="wrap_content"
             android:src="@drawable/right_slide_three"
             android:layout_gravity="end|bottom"
-            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:contentDescription="@string/string_pitch_on" />
 
     </androidx.cardview.widget.CardView>
 
@@ -40,7 +40,6 @@
         android:id="@+id/tv_image_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="《成龙历险记》"
         android:singleLine="true"
         android:ellipsize="end"
         android:textSize="26sp"
@@ -52,7 +51,6 @@
         android:id="@+id/tv_image_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="成龙"
         android:textSize="18sp"
         android:textColor="@android:color/darker_gray"
         android:layout_marginTop="10dp"

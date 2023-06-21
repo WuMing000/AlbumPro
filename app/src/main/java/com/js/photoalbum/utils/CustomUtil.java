@@ -1,17 +1,11 @@
 package com.js.photoalbum.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -24,8 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.js.photoalbum.MyApplication;
-import com.js.photoalbum.bean.DownBean;
-import com.js.photoalbum.bean.DownProgressBean;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -41,9 +33,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Timer;
+import java.nio.charset.StandardCharsets;
 
 import androidx.core.content.FileProvider;
 
@@ -76,22 +66,6 @@ public class CustomUtil {
         }
     }
 
-    public static void killAppProcess()
-    {
-        //注意：不能先杀掉主进程，否则逻辑代码无法继续执行，需先杀掉相关进程最后杀掉主进程
-        ActivityManager mActivityManager = (ActivityManager) MyApplication.getContext().getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> mList = mActivityManager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : mList)
-        {
-            if (runningAppProcessInfo.pid != android.os.Process.myPid())
-            {
-                android.os.Process.killProcess(runningAppProcessInfo.pid);
-            }
-        }
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(0);
-    }
-
     /**
      * 判断视图v是否应该隐藏输入软键盘，若v不是输入框，返回false
      *
@@ -100,7 +74,7 @@ public class CustomUtil {
      * @return 视图v是否应该隐藏输入软键盘，若v不是输入框，返回false
      */
     public static boolean isShouldHideInput(View v, MotionEvent event) {
-        if (v != null && (v instanceof EditText)) {
+        if ((v instanceof EditText)) {
             int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
@@ -136,9 +110,7 @@ public class CustomUtil {
         int bottom = top + view.getHeight();
         Log.e(TAG, "left:" + left + ",right:" + right + ",top:" + top + ",bottom:" + bottom);
         if (top <= y) {
-            if (bottom >= y && x >= left && x <= right) {
-                return true;
-            }
+            return bottom >= y && x >= left && x <= right;
         }
         return false;
     }
@@ -198,78 +170,6 @@ public class CustomUtil {
         return localVersion;
     }
 
-    public static DownBean updateAPK(String url) {
-
-        DownloadManager manager = (DownloadManager) MyApplication.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        /*
-         * 1. 封装下载请求
-         */
-        // 创建下载请求
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-
-        Log.e(TAG, MyApplication.getContext().getExternalFilesDir(null).getAbsolutePath());
-        Log.e(TAG, url.substring(url.lastIndexOf("/") + 1));
-        File saveFile = new File(MyApplication.getContext().getExternalFilesDir(null), "com.js.photoalbum");
-        request.setDestinationUri(Uri.fromFile(saveFile));
-
-        if (saveFile.exists()) {
-            saveFile.delete();
-            Log.e(TAG, "删除");
-        }
-
-        long downloadId = manager.enqueue(request);
-
-        return new DownBean(downloadId);
-    }
-
-    public static DownProgressBean updateProgress(long downloadId, Timer timer) {
-        DownProgressBean downProgressBean = new DownProgressBean();
-        DownloadManager manager = (DownloadManager) MyApplication.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        // 创建一个查询对象
-        DownloadManager.Query query = new DownloadManager.Query();
-        // 根据 下载ID 过滤结果
-        query.setFilterById(downloadId);
-        // 还可以根据状态过滤结果
-        // query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);
-        // 执行查询, 返回一个 Cursor (相当于查询数据库)
-        Cursor cursor = manager.query(query);
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            return downProgressBean;
-        }
-        // 下载ID
-        @SuppressLint("Range") long id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
-        // 下载请求的状态
-        @SuppressLint("Range") int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-        // 下载文件在本地保存的路径（Android 7.0 以后 COLUMN_LOCAL_FILENAME 字段被弃用, 需要用 COLUMN_LOCAL_URI 字段来获取本地文件路径的 Uri）
-        @SuppressLint("Range") String localFilename = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-        // 已下载的字节大小
-        @SuppressLint("Range") long downloadedSoFar = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-        // 下载文件的总字节大小
-        @SuppressLint("Range") long totalSize = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)) == -1 ? 1 : cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-        cursor.close();
-//        System.out.println("下载进度: " + downloadedSoFar  + "/" + totalSize);
-        DecimalFormat decimalFormat = new DecimalFormat( "##0.00 ");
-        String dd = decimalFormat.format(downloadedSoFar * 1.0f / totalSize * 100);
-//        Log.e(TAG, downloadedSoFar * 1.0f / totalSize * 100 + "");
-        Log.e(TAG, dd);
-        downProgressBean = new DownProgressBean(downloadId, dd);
-        if (status == DownloadManager.STATUS_SUCCESSFUL) {
-            File installFile = null;
-            File saveFile = new File(localFilename.substring(7));
-            if (saveFile.exists()) {
-                installFile = renameFile(localFilename.substring(7), localFilename.substring(7) + ".apk");
-            }
-            Log.e(TAG, installFile.getAbsolutePath());
-//            System.out.println("下载成功, 打开文件, 文件路径: " + localFilename);
-            installAPK(MyApplication.getContext(), installFile);
-            timer.cancel();
-        }
-
-        return downProgressBean;
-    }
-
     /**
      * oldPath 和 newPath必须是新旧文件的绝对路径
      */
@@ -284,8 +184,7 @@ public class CustomUtil {
         File oldFile = new File(oldPath);
         File newFile = new File(newPath);
         boolean b = oldFile.renameTo(newFile);
-        File file2 = new File(newPath);
-        return file2;
+        return new File(newPath);
     }
 
     /**
@@ -304,7 +203,7 @@ public class CustomUtil {
                 Log.e("TAG", "11111111111111");
                 //如果SDK版本>=24，即：Build.VERSION.SDK_INT >= 24，使用FileProvider兼容安装apk
                 String packageName = mContext.getApplicationContext().getPackageName();
-                String authority = new StringBuilder(packageName).append(".fileprovider").toString();
+                String authority = packageName + ".fileprovider";
                 Uri apkUri = FileProvider.getUriForFile(mContext, authority, apkName);
                 intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             } else {
@@ -317,25 +216,6 @@ public class CustomUtil {
             e.printStackTrace();
             Log.e("TAG", e.toString());
         }
-    }
-
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) {
-        } else {
-            //如果仅仅是用来判断网络连接
-            // 则可以使用 cm.getActiveNetworkInfo().isAvailable();
-            NetworkInfo[] info = cm.getAllNetworkInfo();
-            if (info != null) {
-                for (NetworkInfo networkInfo : info) {
-                    if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -359,7 +239,7 @@ public class CustomUtil {
             // 列出该目录下所有文件
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            FTPFile[] files = ftpClient.listFiles(new String(FileName.getBytes("GBK"),"iso-8859-1"));
+            FTPFile[] files = ftpClient.listFiles(new String(FileName.getBytes("GBK"), StandardCharsets.ISO_8859_1));
             if (files.length != 1) {
                 Log.e(TAG, "remote file is not exists!");
                 return false;
@@ -379,7 +259,7 @@ public class CustomUtil {
             outputStream = new FileOutputStream(localFile, true);
             ftpClient.setRestartOffset(localFile.length());
             Log.e(TAG, localFile.length() + "");
-            inputStream = ftpClient.retrieveFileStream(new String(FileName.getBytes("GBK"),"iso-8859-1"));
+            inputStream = ftpClient.retrieveFileStream(new String(FileName.getBytes("GBK"), StandardCharsets.ISO_8859_1));
             byte[] bytes = new byte[4096];
             int c;
             int finishSize = (int) localFile.length();

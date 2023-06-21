@@ -1,20 +1,19 @@
 package com.js.photoalbum.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-        import android.graphics.Bitmap;
-        import android.graphics.Canvas;
-        import android.graphics.Matrix;
-        import android.util.AttributeSet;
-        import android.view.MotionEvent;
-        import android.view.View;
-import android.widget.ImageView;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 public class ZoomImageView extends androidx.appcompat.widget.AppCompatImageView {
     public static final int STATUS_INIT = 1;//常量初始化
     public static final int STATUS_ZOOM_OUT = 2;//图片放大状态常量
     public static final int STATUS_ZOOM_IN = 3;//图片缩小状态常量
     public static final int STATUS_MOVE = 4;//图片拖动状态常量
-    private Matrix matrix = new Matrix();//对图片进行移动和缩放变换的矩阵
+    private final Matrix matrix = new Matrix();//对图片进行移动和缩放变换的矩阵
     private Bitmap sourceBitmap;//待展示的Bitmap对象
     private int currentStatus;//记录当前操作的状态，可选值为STATUS_INIT、STATUS_ZOOM_OUT、STATUS_ZOOM_IN和STATUS_MOVE
     private int width;//ZoomImageView控件的宽度
@@ -37,9 +36,6 @@ public class ZoomImageView extends androidx.appcompat.widget.AppCompatImageView 
 
     /**
      * ZoomImageView构造函数，将当前操作状态设为STATUS_INIT。
-     *
-     * @param context
-     * @param attrs
      */
     public ZoomImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -67,24 +63,21 @@ public class ZoomImageView extends androidx.appcompat.widget.AppCompatImageView 
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (initRatio == totalRatio) {
-            getParent().requestDisallowInterceptTouchEvent(false);
-        } else {
-            getParent().requestDisallowInterceptTouchEvent(true);
-        }
+        getParent().requestDisallowInterceptTouchEvent(initRatio != totalRatio);
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
                 if (event.getPointerCount() == 2) {
-// 当有两个手指按在屏幕上时，计算两指之间的距离
+                    // 当有两个手指按在屏幕上时，计算两指之间的距离
                     lastFingerDis = distanceBetweenFingers(event);
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerCount() == 1) {
-// 只有单指按在屏幕上移动时，为拖动状态
+                    // 只有单指按在屏幕上移动时，为拖动状态
                     float xMove = event.getX();
                     float yMove = event.getY();
                     if (lastXMove == -1 && lastYMove == -1) {

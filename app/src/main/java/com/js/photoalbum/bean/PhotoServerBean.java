@@ -2,6 +2,8 @@ package com.js.photoalbum.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
+
 public class PhotoServerBean {
 
     @SerializedName("id")
@@ -44,6 +46,7 @@ public class PhotoServerBean {
         this.photoUrl = photoUrl;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "PhotoServerBean{" +

@@ -1,5 +1,6 @@
 package com.js.photoalbum;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class MyApplication extends Application {
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static PhotoListDataSaveUtils photoListDataSaveUtils;
     private static PhotoListDataSaveUtils slideSpeedSaveUtils;

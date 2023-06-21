@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.js.photoalbum.BaseActivity;
 import com.js.photoalbum.R;
 import com.js.photoalbum.utils.CheckPermissionUtil;
-import com.js.photoalbum.utils.CustomUtil;
 
 import androidx.annotation.NonNull;
 

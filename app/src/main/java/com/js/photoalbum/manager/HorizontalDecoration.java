@@ -3,12 +3,14 @@ package com.js.photoalbum.manager;
 import android.graphics.Rect;
 import android.view.View;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /*** 自定义ItemDecoration，设置第一个视图和最后一个视图偏移的距离，确保第一个视图和最后一个视图在屏幕中居中<P/>* @author mailanglideguozhe 20210520*/
 public class HorizontalDecoration extends RecyclerView.ItemDecoration {
-    private int space = 0;
+    private int space;
     /*** 第一个视图和最后一个视图偏移的距离*/
     private int distance = 0;
     private static final String TAG = "HorizontalDecoration";
@@ -22,7 +24,7 @@ public class HorizontalDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         int pos = parent.getChildAdapterPosition(view);
         RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams)view.getLayoutParams();
-        /*** 仅计算一次偏移边距即可，无需重复计算<P/>* 由于此时View并未完成测量，无法基于测量获取其宽度;思路是在view绘制完成后再进行测量，并设置第一个的左边距*/
+        /* 仅计算一次偏移边距即可，无需重复计算<P/>* 由于此时View并未完成测量，无法基于测量获取其宽度;思路是在view绘制完成后再进行测量，并设置第一个的左边距*/
         if(distance <= 0){
             view.post(new Runnable() {
                 @Override
@@ -39,8 +41,8 @@ public class HorizontalDecoration extends RecyclerView.ItemDecoration {
             });
         }
 
-        /*** 通过设置Item左右边距实现第一个左侧和最后一个右侧设置边距,确保显示的视图位于屏幕中间*/
-        int itemCount = parent.getAdapter().getItemCount();
+        /* 通过设置Item左右边距实现第一个左侧和最后一个右侧设置边距,确保显示的视图位于屏幕中间*/
+        int itemCount = Objects.requireNonNull(parent.getAdapter()).getItemCount();
         if(pos == 0){
             layoutParams.setMargins(distance,0,space,0);
         }else if(pos == itemCount - 1){
@@ -49,7 +51,7 @@ public class HorizontalDecoration extends RecyclerView.ItemDecoration {
             layoutParams.setMargins(space,0,space,0);
         }
 
-        /*** 更新子视图的边距*/
+        /* 更新子视图的边距*/
         view.setLayoutParams(layoutParams);
         super.getItemOffsets(outRect, view, parent, state);
     }

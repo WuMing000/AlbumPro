@@ -22,9 +22,6 @@ public class APPListDataSaveUtils {
 
     /**
      * 保存普通String
-     *
-     * @param key
-     * @param value
      */
     public void setDataString(String key, String value) {
         if (value == null) {
@@ -40,8 +37,6 @@ public class APPListDataSaveUtils {
 
     /**
      * 获取普通的String
-     * @param key
-     * @return
      */
     public String getDataString(String key) {
         String value = "";

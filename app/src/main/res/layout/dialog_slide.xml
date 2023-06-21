@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="画框设置"
+            android:text="@string/string_settings_frame"
             android:textColor="@color/black"
             android:layout_marginTop="20dp"/>
 
@@ -30,28 +30,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="滚动速度："
+                android:text="@string/string_roll_speed"
                 android:textColor="@color/gray"/>
 
             <EditText
                 android:id="@+id/et_speed"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="设置画框滚动速度(1000~120000ms)"
+                android:layout_weight="1"
+                android:background="@drawable/selector_edittext_bg"
+                android:hint="@string/string_roll_speed_hint"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLength="9"
+                android:padding="10dp"
                 android:textColor="@color/black"
-                android:textColorHint="@android:color/darker_gray"
-                android:background="@drawable/selector_edittext_bg"
-                android:padding="10dp"/>
+                android:textColorHint="@color/dark_gray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ms"
+                android:text="@string/string_millisecond"
                 android:textColor="@color/gray"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginStart="5dp"/>
 
         </LinearLayout>
 
@@ -67,7 +68,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="滚动特效："
+                android:text="@string/string_roll_type"
                 android:textColor="@color/gray"/>
 
 
@@ -83,14 +84,14 @@
                     android:id="@+id/rb_smooth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="平滑"
+                    android:text="@string/string_smooth"
                     android:textColor="@color/black"/>
 
                 <RadioButton
                     android:id="@+id/rb_reduce"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="缩小"
+                    android:text="@string/string_reduce"
                     android:textColor="@color/black"/>
 
             </RadioGroup>
@@ -117,9 +118,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="设置"
+                android:text="@string/string_settings"
                 android:textColor="@color/black"
-                android:background="#00000000"/>
+                android:background="#00000000" />
 
             <View
                 android:layout_width="1dp"
@@ -131,7 +132,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="取消"
+                android:text="@string/string_cancel"
                 android:textColor="@color/black"
                 android:background="#00000000"/>
 

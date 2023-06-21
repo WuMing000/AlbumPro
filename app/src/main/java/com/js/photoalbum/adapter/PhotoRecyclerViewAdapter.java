@@ -2,10 +2,7 @@ package com.js.photoalbum.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,24 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.js.photoalbum.MyApplication;
 import com.js.photoalbum.R;
-import com.js.photoalbum.activity.ImageLargeActivity;
 import com.js.photoalbum.bean.PhotoBean;
-import com.js.photoalbum.utils.ToastUtils;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 @SuppressLint("LongLogTag")
@@ -40,8 +27,8 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
     private final static String TAG = "PhotoRecyclerViewAdapter===========>";
 
-    private Context mContext;
-    private List<PhotoBean> mList;
+    private final Context mContext;
+    private final List<PhotoBean> mList;
 
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
@@ -54,7 +41,6 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @NonNull
     @Override
     public PhotoRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        Log.e(TAG, "wuwuwuwuwu");
         View view;
         Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
         int ori = mConfiguration.orientation; //获取屏幕方向
@@ -141,17 +127,17 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
         return mList == null ? 0 : mList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private SimpleDraweeView ivPhoto;
-        private CardView cvImage;
-        private ImageView ivRightSlide;
-        private TextView tvImageName;
-        private TextView tvImageAuthor;
+        private final SimpleDraweeView ivPhoto;
+//        private CardView cvImage;
+        private final ImageView ivRightSlide;
+        private final TextView tvImageName;
+        private final TextView tvImageAuthor;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            cvImage = itemView.findViewById(R.id.cv_image);
+//            cvImage = itemView.findViewById(R.id.cv_image);
             ivPhoto = itemView.findViewById(R.id.iv_photo);
             ivRightSlide = itemView.findViewById(R.id.iv_right_slide);
             tvImageName = itemView.findViewById(R.id.tv_image_name);

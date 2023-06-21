@@ -1,10 +1,7 @@
 package com.js.photoalbum.activity;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -18,14 +15,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -39,8 +32,6 @@ import com.js.photoalbum.R;
 import com.js.photoalbum.adapter.BottomRecyclerViewAdapter;
 import com.js.photoalbum.adapter.PhotoRecyclerViewAdapter;
 import com.js.photoalbum.bean.BottomBean;
-import com.js.photoalbum.bean.DownBean;
-import com.js.photoalbum.bean.DownProgressBean;
 import com.js.photoalbum.bean.PhotoBean;
 import com.js.photoalbum.bean.PhotoServerBean;
 import com.js.photoalbum.bean.SlideTypeBean;
@@ -60,35 +51,27 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
-@SuppressLint("LongLogTag")
+@SuppressLint({"LongLogTag", "NotifyDataSetChanged"})
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity=============>";
 
+    private static final int GET_LOCAL_PHOTO = 0x001;
     private static final int GET_PHOTO = 0x002;
     private static final int ADAPTER_CHANGED = 0x003;
     private static final int UPDATE_VERSION_DIFFERENT = 0x004;
     private static final int UPDATE_VERSION_SAME = 0x005;
     private static final int NETWORK_NO_CONNECT = 0x006;
-    private static final int DOWNLOAD_ERROR = 0x007;
-    private static final int DOWNLOADING_PROGRESS = 0x008;
+//    private static final int DOWNLOAD_ERROR = 0x007;
+//    private static final int DOWNLOADING_PROGRESS = 0x008;
 
     private RecyclerView rvPhoto;
     private PhotoRecyclerViewAdapter adapter;
@@ -96,46 +79,36 @@ public class MainActivity extends BaseActivity {
     private List<PhotoBean> localList;
     private List<PhotoBean> natureList;
     private List<PhotoBean> naturePortraitList;
-    private List<PhotoBean> girlList;
-    private List<PhotoBean> girlPortraitList;
+//    private List<PhotoBean> girlList;
     private List<PhotoBean> plantList;
     private List<PhotoBean> plantPortraitList;
-    private List<PhotoBean> scenicList;
-    private List<PhotoBean> scenicPortraitList;
-    private List<PhotoBean> customList;
-    private List<PhotoBean> customPortraitList;
+//    private List<PhotoBean> scenicList;
+//    private List<PhotoBean> customList;
     private List<PhotoBean> skyList;
     private List<PhotoBean> skyPortraitList;
-    private List<PhotoBean> cartoonList;
-    private List<PhotoBean> cartoonPortraitList;
+//    private List<PhotoBean> cartoonList;
+//    private List<PhotoBean> cartoonPortraitList;
     private List<PhotoBean> carList;
     private List<PhotoBean> carPortraitList;
     private List<PhotoBean> paintList;
     private List<PhotoBean> paintPortraitList;
     private List<PhotoBean> slideList;
-
-//    private LinearLayout llSlide;
     private Button btnSlide, btnSlideSetting;
     private ImageView ivGaussBlur, ivBack;
 
-    private RecyclerView rvBottom;
     private BottomRecyclerViewAdapter bottomRecyclerViewAdapter;
     private List<BottomBean> bottomBeanList;
 
-    private final float mShrinkAmount = 0.55f;
-    private final float mShrinkDistance = 0.9f;
+//    private final float mShrinkAmount = 0.55f;
+//    private final float mShrinkDistance = 0.9f;
 
     private boolean isScroll = true;
 
     private CenterZoomLayoutManager centerZoomLayoutManager;
-    private LinearLayoutManager linearLayoutManager;
 
     private int currentPosition;
 
     private String currentAlbum;
-    private AlertDialog dialog;
-
-    private ObjectAnimator animator;
     private UpdateDialog updateDialog;
     private AddPhotoDialog addPhotoDialog;
     private SlideDialog slideDialog;
@@ -147,28 +120,18 @@ public class MainActivity extends BaseActivity {
 
 //    private int slideSpeed;
 
-    private Handler handler = new Handler(Looper.myLooper()) {
+    private final Handler handler = new Handler(Looper.myLooper()) {
         @Override
         public void dispatchMessage(@NonNull Message msg) {
             super.dispatchMessage(msg);
             switch (msg.what) {
-                case 0x001:
+                case GET_LOCAL_PHOTO:
                     Bundle bundle = (Bundle) msg.obj;
                     String path = bundle.getString("path");
                     String name = bundle.getString("name");
                     String author = bundle.getString("author");
-//                Bitmap bitmap = BitmapFactory.decodeFile(path);
-//                if (bitmap.getWidth() == 1920 && bitmap.getHeight() == 1080) {
-
-//                    mList.add(new PhotoBean(path, name, author));
                     localList.add(new PhotoBean(path, name, author));
-//                    if (!CustomUtil.isNetworkAvailable(MainActivity.this)) {
-//                        mList.addAll(localList);
-//                        adapter.notifyDataSetChanged();
-//                    }
                     adapter.notifyDataSetChanged();
-//                rvPhoto.smoothScrollToPosition(0);
-//                }
                     break;
                 case GET_PHOTO:
                     Bundle data = (Bundle) msg.obj;
@@ -189,43 +152,50 @@ public class MainActivity extends BaseActivity {
                                     natureList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
                                 }
-                            } else if ("girl".equals(list.get(0).getPhotoType())) {
-                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
-//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    girlList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
-                                }
-                            } else if ("plant".equals(list.get(0).getPhotoType())) {
+                            }
+//                            else if ("girl".equals(list.get(0).getPhotoType())) {
+//                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+////                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    girlList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+//                                }
+//                            }
+                            else if ("plant".equals(list.get(0).getPhotoType())) {
                                 for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
 //                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     plantList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
                                 }
-                            } else if ("scenic".equals(list.get(0).getPhotoType())) {
-                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
-//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    scenicList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
-                                }
-                            } else if ("custom".equals(list.get(0).getPhotoType())) {
-                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
-//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    customList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
-                                }
-                            } else if ("sky".equals(list.get(0).getPhotoType())) {
+                            }
+//                            else if ("scenic".equals(list.get(0).getPhotoType())) {
+//                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+////                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    scenicList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+//                                }
+//                            }
+//                            else if ("custom".equals(list.get(0).getPhotoType())) {
+//                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+////                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    customList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+//                                }
+//                            }
+                            else if ("sky".equals(list.get(0).getPhotoType())) {
                                 for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
 //                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     skyList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
                                 }
-                            } else if ("cartoon".equals(list.get(0).getPhotoType())) {
-                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
-//                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    cartoonList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
-                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
-                                }
-                            } else if ("car".equals(list.get(0).getPhotoType())) {
+                            }
+//                            else if ("cartoon".equals(list.get(0).getPhotoType())) {
+//                                for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
+////                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    cartoonList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
+//                                    handler.sendEmptyMessageAtTime(ADAPTER_CHANGED, 100);
+//                                }
+//                            }
+                            else if ("car".equals(list.get(0).getPhotoType())) {
                                 for (int i = 0; i < list.get(0).getPhotoUrl().split(",").length; i++) {
 //                                    mList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
                                     carList.add(new PhotoBean(list.get(0).getPhotoUrl().split(",")[i], "", ""));
@@ -289,36 +259,36 @@ public class MainActivity extends BaseActivity {
                         }
                     }.start();
                     break;
-                case DOWNLOAD_ERROR:
-                    Toast.makeText(MainActivity.this, "下载异常，已取消下载", Toast.LENGTH_SHORT).show();
-                    break;
-                case DOWNLOADING_PROGRESS:
-                    String downUrl = (String) msg.obj;
-                    DownBean downBean = CustomUtil.updateAPK(downUrl);
-                    Timer timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            DownProgressBean downProgressBean = CustomUtil.updateProgress(downBean.getDownloadId(), timer);
-                            Log.e(TAG, downProgressBean.getProgress());
-                            try {
-                                float progress = Float.parseFloat(downProgressBean.getProgress());
-                                if (progress == 100.00) {
-                                    updateDialog.dismiss();
-                                }
-                                updateDialog.setPbProgress((int) progress);
-                                updateDialog.setTvProgress(downProgressBean.getProgress());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                updateDialog.dismiss();
-                                timer.cancel();
-                                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                                manager.remove(downProgressBean.getDownloadId());
-                                handler.sendEmptyMessageAtTime(DOWNLOAD_ERROR, 100);
-                            }
-                        }
-                    }, 0, 1000);
-                    break;
+//                case DOWNLOAD_ERROR:
+//                    Toast.makeText(MainActivity.this, "下载异常，已取消下载", Toast.LENGTH_SHORT).show();
+//                    break;
+//                case DOWNLOADING_PROGRESS:
+//                    String downUrl = (String) msg.obj;
+//                    DownBean downBean = CustomUtil.updateAPK(downUrl);
+//                    Timer timer = new Timer();
+//                    timer.schedule(new TimerTask() {
+//                        @Override
+//                        public void run() {
+//                            DownProgressBean downProgressBean = CustomUtil.updateProgress(downBean.getDownloadId(), timer);
+//                            Log.e(TAG, downProgressBean.getProgress());
+//                            try {
+//                                float progress = Float.parseFloat(downProgressBean.getProgress());
+//                                if (progress == 100.00) {
+//                                    updateDialog.dismiss();
+//                                }
+//                                updateDialog.setPbProgress((int) progress);
+//                                updateDialog.setTvProgress(downProgressBean.getProgress());
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                updateDialog.dismiss();
+//                                timer.cancel();
+//                                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+//                                manager.remove(downProgressBean.getDownloadId());
+//                                handler.sendEmptyMessageAtTime(DOWNLOAD_ERROR, 100);
+//                            }
+//                        }
+//                    }, 0, 1000);
+//                    break;
             }
         }
     };
@@ -393,24 +363,21 @@ public class MainActivity extends BaseActivity {
         mList = new ArrayList<>();
         localList = new ArrayList<>();
         natureList = new ArrayList<>();
-        girlList = new ArrayList<>();
+//        girlList = new ArrayList<>();
         plantList = new ArrayList<>();
-        scenicList = new ArrayList<>();
-        customList = new ArrayList<>();
+//        scenicList = new ArrayList<>();
+//        customList = new ArrayList<>();
         skyList = new ArrayList<>();
-        cartoonList = new ArrayList<>();
+//        cartoonList = new ArrayList<>();
         carList = new ArrayList<>();
         paintList = new ArrayList<>();
         slideList = new ArrayList<>();
         bottomBeanList = new ArrayList<>();
 
         naturePortraitList = new ArrayList<>();
-        girlPortraitList = new ArrayList<>();
         plantPortraitList = new ArrayList<>();
-        scenicPortraitList = new ArrayList<>();
-        customPortraitList = new ArrayList<>();
         skyPortraitList = new ArrayList<>();
-        cartoonPortraitList = new ArrayList<>();
+//        cartoonPortraitList = new ArrayList<>();
         carPortraitList = new ArrayList<>();
         paintPortraitList = new ArrayList<>();
 
@@ -419,17 +386,13 @@ public class MainActivity extends BaseActivity {
         ivBack = findViewById(R.id.iv_back);
         btnSlide = findViewById(R.id.btn_slide);
         btnSlideSetting = findViewById(R.id.btn_slide_setting);
-//        btnClearSlide = findViewById(R.id.btn_clear_slide);
-//        btnStartSlide = findViewById(R.id.btn_start_slide);
-//        btnSettingSlide = findViewById(R.id.btn_setting_slide);
-//        llSlide = findViewById(R.id.ll_slide);
-        rvBottom = findViewById(R.id.rv_bottom);
+        RecyclerView rvBottom = findViewById(R.id.rv_bottom);
 
 //        ivGaussBlur.setImageResource(R.mipmap.nature_default);
 
         adapter = new PhotoRecyclerViewAdapter(this, mList);
         centerZoomLayoutManager = new CenterZoomLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvPhoto.setLayoutManager(centerZoomLayoutManager);
 
         bottomRecyclerViewAdapter = new BottomRecyclerViewAdapter(this, bottomBeanList);
@@ -461,7 +424,7 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 super.run();
                 String serverFile = CustomUtil.getServerFile(Contact.SERVER_URL + ":8080/test/js_project/album/Version.txt");
-                Log.e(TAG, serverFile.length() + "=======wu");
+                Log.e(TAG, serverFile.length() + "=======");
                 String localVersionName = CustomUtil.getLocalVersionName();
                 if (serverFile.length() == 0) {
                     handler.sendEmptyMessageAtTime(NETWORK_NO_CONNECT, 100);
@@ -504,7 +467,7 @@ public class MainActivity extends BaseActivity {
 
     private void getUpdateAPK(String version) {
         try {
-            Log.e(TAG, "================开始");
+            Log.e(TAG, "================start ftp");
             FTPClient client = new FTPClient();
             client.connect(Contact.FTP_SERVER_IP, Contact.FTP_SERVER_PORT);
             client.login(Contact.FTP_SERVER_USERNAME, Contact.FTP_SERVER_PASSWORD);
@@ -574,7 +537,7 @@ public class MainActivity extends BaseActivity {
 //                    mList.add(path);
 //                    adapter.notifyDataSetChanged();
             Message message = new Message();
-            message.what = 0x001;
+            message.what = GET_LOCAL_PHOTO;
             Bundle bundle = new Bundle();
             bundle.putString("path", path);
             bundle.putString("name", name);
@@ -879,44 +842,12 @@ public class MainActivity extends BaseActivity {
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
                         mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (natureList.size() != 0) {
                             if (ori == Configuration.ORIENTATION_LANDSCAPE) {
                                 mList.addAll(natureList);
                             } else {
                                 mList.addAll(naturePortraitList);
                             }
-                        }
-                        adapter.notifyDataSetChanged();
-//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
-                        if (currentPosition == 0) {
-                            rvPhoto.smoothScrollToPosition(0);
-                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-                        } else {
-                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-                        }
-                    }
-                } else if ("养眼美女".equals(bottomBeanList.get(position).getBottomName())) {
-                    ToastUtils.cancelToast();
-                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
-//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
-                    } else {
-                        currentAlbum = bottomBeanList.get(position).getBottomName();
-                        mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
-                        if (girlList.size() != 0) {
-                            mList.addAll(girlList);
                         }
                         adapter.notifyDataSetChanged();
 //                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
@@ -935,12 +866,6 @@ public class MainActivity extends BaseActivity {
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
                         mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (plantList.size() != 0) {
                             if (ori == Configuration.ORIENTATION_LANDSCAPE) {
                                 mList.addAll(plantList);
@@ -1020,47 +945,11 @@ public class MainActivity extends BaseActivity {
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
                         mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (skyList.size() != 0) {
                             if (ori == Configuration.ORIENTATION_LANDSCAPE) {
                                 mList.addAll(skyList);
                             } else {
                                 mList.addAll(skyPortraitList);
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
-//                    getAPPData(Contact.SERVER_URL + ":" + Contact.SERVER_PORT + "/" + Contact.GET_PHOTO);
-                        if (currentPosition == 0) {
-                            rvPhoto.smoothScrollToPosition(0);
-                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-                        } else {
-                            rvPhoto.smoothScrollBy(-480 * mList.size() * mList.size(), 0);
-                        }
-                    }
-                } else if ("热血动漫".equals(bottomBeanList.get(position).getBottomName())) {
-                    ToastUtils.cancelToast();
-                    if (bottomBeanList.get(position).getBottomName().equals(currentAlbum)) {
-//                        ToastUtils.showToast(MainActivity.this, "正在操作该分类");
-//                    Toast.makeText(MainActivity.this, "正在操作该分类", Toast.LENGTH_SHORT).show();
-                    } else {
-                        currentAlbum = bottomBeanList.get(position).getBottomName();
-                        mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
-                        if (cartoonList.size() != 0) {
-                            if (ori == Configuration.ORIENTATION_LANDSCAPE) {
-                                mList.addAll(cartoonList);
-                            } else {
-                                mList.addAll(cartoonPortraitList);
                             }
                         }
                         adapter.notifyDataSetChanged();
@@ -1080,12 +969,6 @@ public class MainActivity extends BaseActivity {
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
                         mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (carList.size() != 0) {
                             if (ori == Configuration.ORIENTATION_LANDSCAPE) {
                                 mList.addAll(carList);
@@ -1110,12 +993,6 @@ public class MainActivity extends BaseActivity {
                     } else {
                         currentAlbum = bottomBeanList.get(position).getBottomName();
                         mList.clear();
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20130316/68888e99d665f2b8dba45e065c60ca42.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/20150417/31bdff0d6c694b93ba462ffb21e8da4b.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0518/225517rRWjH.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2023/0527/234811tmIC3.jpg", "", ""));
-//                    mList.add(new PhotoBean("http://img.netbian.com/file/2016/0108/86d01043b9b088bc0f833b6167a54528.jpg", "", ""));
-//                mList.add(Contact.SERVER_URL + "1.jpg");
                         if (paintList.size() != 0) {
                             if (ori == Configuration.ORIENTATION_LANDSCAPE) {
                                 mList.addAll(paintList);
@@ -1228,12 +1105,6 @@ public class MainActivity extends BaseActivity {
         btnSlide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (llSlide.getVisibility() == View.VISIBLE) {
-//                    llSlide.setVisibility(View.GONE);
-//                } else {
-//                    llSlide.setVisibility(View.VISIBLE);
-//                    animator.start();
-//                }
                 if (slideList.size() == 0) {
                     ToastUtils.showToast(MainActivity.this, "请长按图片添加到画框");
                 } else {
@@ -1297,22 +1168,6 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-//        btnClearSlide.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                llSlide.setVisibility(View.GONE);
-//                if (slideList.size() != 0) {
-//                    slideList.clear();
-//                    adapter.notifyDataSetChanged();
-//                    rvPhoto.smoothScrollBy(-10, 0);
-//                    MyApplication.setPhotoList(slideList);
-//                    ToastUtils.showToast(MainActivity.this, "已清空画框，请重新添加");
-//                } else {
-//                    ToastUtils.showToast(MainActivity.this, "画框为空，无法进行操作");
-//                }
-//            }
-//        });
-
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1322,9 +1177,9 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+    private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
             Log.e(TAG, "================onScroll");
             int firstVisibleItemPosition = centerZoomLayoutManager.findFirstVisibleItemPosition();
@@ -1359,9 +1214,9 @@ public class MainActivity extends BaseActivity {
             Log.e(TAG, firstVisibleItemPosition + "," + lastVisibleItemPosition + "," + currentPosition);
             float midpoint = recyclerView.getWidth() / 2.f;
             float d0 = 0.f;
-            float d1 = mShrinkDistance * midpoint;
+            float d1 = 0.9f * midpoint;
             float s0 = 1.f;
-            float s1 = 1.f - mShrinkAmount;
+            float s1 = 1.f - 0.55f;
             for (int i = 0; i < recyclerView.getChildCount(); i++) {
                 if (i >= 1 && isScroll) {
                     View child = recyclerView.getChildAt(i);
@@ -1397,9 +1252,6 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         Log.e(TAG, "onStop");
-        if (dialog != null) {
-            dialog.dismiss();
-        }
         if (slideDialog != null) {
             slideDialog.dismiss();
         }
@@ -1416,70 +1268,50 @@ public class MainActivity extends BaseActivity {
 //            mList.clear();
 //            isScroll = true;
 //        }
-        if (mOnScrollListener != null) {
-            rvPhoto.removeOnScrollListener(mOnScrollListener);
-        }
+        rvPhoto.removeOnScrollListener(mOnScrollListener);
         if (updateDialog != null) {
             updateDialog.dismiss();
         }
     }
 
-    private void getAPPData(String url) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                //1.创建OkHttpClient对象
-                OkHttpClient okHttpClient = new OkHttpClient().newBuilder().connectTimeout(120000, TimeUnit.MILLISECONDS).readTimeout(120000, TimeUnit.MILLISECONDS).build();
-                //2.创建Request对象，设置一个url地址,设置请求方式。
-                Request request = new Request.Builder().url(url).method("GET",null).build();
-                //3.创建一个call对象,参数就是Request请求对象
-                Call call = okHttpClient.newCall(request);
-                //4.请求加入调度，重写回调方法
-                call.enqueue(new Callback() {
-                    //请求失败执行的方法
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                        getAPPData(url);
-                        Log.e("TAG", "服务器异常，请求数据失败");
-//                        handler.sendEmptyMessageAtTime(0x015, 100);
-                    }
-                    //请求成功执行的方法
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-//                        Log.e("TAG", response.body().string());
-                        String text = response.body().string();
-                        //ArrayList<APPHomeBean> list = new Gson().fromJson(text, new TypeToken<List<APPHomeBean>>() {}.getType());
-                        Log.e("TAG", text);
-                        Message message = new Message();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("text", text);
-                        bundle.putString("url", url);
-                        message.what = GET_PHOTO;
-                        message.obj = bundle;
-                        handler.sendMessageAtTime(message, 100);
-                    }
-                });
-            }
-        }.start();
-    }
-
-//    /**
-//     * 使editText点击外部时候失去焦点
-//     *
-//     * @param ev 触屏事件
-//     * @return 事件是否被消费
-//     */
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//            if (!CustomUtil.isTouchPointInView(llSlide, (int) ev.getX(), (int) ev.getY())) {
-//                llSlide.setVisibility(View.GONE);
+//    private void getAPPData(String url) {
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//                //1.创建OkHttpClient对象
+//                OkHttpClient okHttpClient = new OkHttpClient().newBuilder().connectTimeout(120000, TimeUnit.MILLISECONDS).readTimeout(120000, TimeUnit.MILLISECONDS).build();
+//                //2.创建Request对象，设置一个url地址,设置请求方式。
+//                Request request = new Request.Builder().url(url).method("GET",null).build();
+//                //3.创建一个call对象,参数就是Request请求对象
+//                Call call = okHttpClient.newCall(request);
+//                //4.请求加入调度，重写回调方法
+//                call.enqueue(new Callback() {
+//                    //请求失败执行的方法
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        e.printStackTrace();
+//                        getAPPData(url);
+//                        Log.e("TAG", "服务器异常，请求数据失败");
+////                        handler.sendEmptyMessageAtTime(0x015, 100);
+//                    }
+//                    //请求成功执行的方法
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+////                        Log.e("TAG", response.body().string());
+//                        String text = response.body().string();
+//                        //ArrayList<APPHomeBean> list = new Gson().fromJson(text, new TypeToken<List<APPHomeBean>>() {}.getType());
+//                        Log.e("TAG", text);
+//                        Message message = new Message();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("text", text);
+//                        bundle.putString("url", url);
+//                        message.what = GET_PHOTO;
+//                        message.obj = bundle;
+//                        handler.sendMessageAtTime(message, 100);
+//                    }
+//                });
 //            }
-//            return super.dispatchTouchEvent(ev);
-//        }
-//        // 必不可少，否则所有的组件都不会有TouchEvent了
-//        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+//        }.start();
 //    }
 }

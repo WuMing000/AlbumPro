@@ -21,8 +21,6 @@ import com.js.photoalbum.bean.SlideTypeBean;
 import com.js.photoalbum.utils.CustomUtil;
 import com.js.photoalbum.utils.ToastUtils;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 
 @SuppressLint("UseCompatLoadingForDrawables")
@@ -31,18 +29,17 @@ public class SlideDialog extends Dialog {
     private final static String TAG = "SlideDialog===========>";
     private final static int MAX_SPEED = 120000;
 
-    private EditText etSpeed;
-    private RadioGroup rgType;
-    private RadioButton rbSmooth, rbReduce;
-    private Button btnConfirm, btnCancel;
+    private final EditText etSpeed;
+    private final RadioButton rbSmooth, rbReduce;
+    private final Button btnConfirm, btnCancel;
     private String slideType;
     private int slideId;
 
     public SlideDialog(@NonNull Context context) {
         super(context, R.style.dialog_soft_input);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_slide, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dialog_slide, null);
         etSpeed = view.findViewById(R.id.et_speed);
-        rgType = view.findViewById(R.id.rg_type);
+        RadioGroup rgType = view.findViewById(R.id.rg_type);
         rbSmooth = view.findViewById(R.id.rb_smooth);
         rbReduce = view.findViewById(R.id.rb_reduce);
         btnConfirm = view.findViewById(R.id.btn_confirm);
@@ -151,7 +148,6 @@ public class SlideDialog extends Dialog {
                 //点击editText控件外部
                 InputMethodManager imm = (InputMethodManager) MyApplication.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
-                    assert v != null;
                     //软键盘工具类关闭软键盘
                     CustomUtil.hideKeyBoard(this);
                     //使输入框失去焦点
