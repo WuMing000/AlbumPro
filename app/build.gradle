@@ -42,6 +42,10 @@ android {
                     }
             }
     }
+
+    lintOptions{
+        disable 'MissingDefaultResource'
+    }
 }
 
 dependencies {
