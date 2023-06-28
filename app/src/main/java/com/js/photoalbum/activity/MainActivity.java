@@ -359,6 +359,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        CustomUtil.hideNavigationBar(this);
 
         mList = new ArrayList<>();
         localList = new ArrayList<>();
@@ -508,27 +509,31 @@ public class MainActivity extends BaseActivity {
         bottomBeanList.add(new BottomBean(R.drawable.local_circle, "本地相册"));
         bottomRecyclerViewAdapter.notifyDataSetChanged();
 
-        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-        while (cursor.moveToNext()) {
-            //获取图片的名称
-            @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-            @SuppressLint("Range") String author = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.AUTHOR));
-            // 获取图片的绝对路径
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            String path = cursor.getString(column_index);
-            Log.i("GetImagesPath", "GetImagesPath: name = "+name+"  path = "+ path);
+        try {
+            Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+            while (cursor.moveToNext()) {
+                //获取图片的名称
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+                @SuppressLint("Range") String author = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.AUTHOR));
+                // 获取图片的绝对路径
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                String path = cursor.getString(column_index);
+                Log.i("GetImagesPath", "GetImagesPath: name = "+name+"  path = "+ path);
 //                    mList.add(path);
 //                    adapter.notifyDataSetChanged();
-            Message message = new Message();
-            message.what = GET_LOCAL_PHOTO;
-            Bundle bundle = new Bundle();
-            bundle.putString("path", path);
-            bundle.putString("name", name);
-            bundle.putString("author", author);
-            message.obj = bundle;
-            handler.sendMessageAtTime(message, 100);
+                Message message = new Message();
+                message.what = GET_LOCAL_PHOTO;
+                Bundle bundle = new Bundle();
+                bundle.putString("path", path);
+                bundle.putString("name", name);
+                bundle.putString("author", author);
+                message.obj = bundle;
+                handler.sendMessageAtTime(message, 100);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
 
 //        if (CustomUtil.isNetworkAvailable(this)) {
 //            new Thread() {

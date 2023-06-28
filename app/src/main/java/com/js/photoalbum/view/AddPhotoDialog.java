@@ -23,7 +23,7 @@ public class AddPhotoDialog extends Dialog {
     private final ImageView ivAddPhoto;
 
     public AddPhotoDialog(@NonNull Context context) {
-        super(context, R.style.dialog_soft_input);
+        super(context);
         @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dialog_add_photo, null);
 
         btnAddPhoto = view.findViewById(R.id.btn_add_photo);

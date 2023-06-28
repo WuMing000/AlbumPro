@@ -52,7 +52,7 @@
             android:name=".activity.ImageLargeActivity"
             android:exported="false"
             android:screenOrientation="unspecified"
-            android:theme="@style/MyThemeFullScreen"
+            android:theme="@style/MyThemeBang"
             android:launchMode="singleTop"/>
 
         <provider
